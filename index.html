@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <title>Test RAADS-R en ligne</title>
   <link rel="stylesheet" href="style.css" />
-  <script type="module" src="main.js"></script>
+  <!-- On ajoute "defer" pour que main.js ne s'exécute qu'après le parsing du DOM -->
+  <script type="module" src="main.js" defer></script>
 </head>
 <body>
   <h1>Test RAADS-R (version française)</h1>
@@ -12,7 +13,7 @@
   
   <div id="container">
     <!-- Colonne de navigation (liste des questions) -->
-    <aside id="question-nav-container">
+    <aside id="question-nav-container" class="collapsed">
       <button id="toggle-nav">Voir toutes mes réponses ▶</button>
       <ul id="question-nav"></ul>
     </aside>
