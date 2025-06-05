@@ -4,21 +4,17 @@
   <meta charset="UTF-8" />
   <title>Test RAADS-R en ligne</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- On ajoute "defer" pour que main.js ne s'exécute qu'après le parsing du DOM -->
-  <script type="module" src="main.js" defer></script>
 </head>
 <body>
   <h1>Test RAADS-R (version française)</h1>
   <p>Répondez honnêtement à chacune des 80 affirmations. Vous pouvez naviguer de question en question via le menu à gauche.</p>
   
   <div id="container">
-    <!-- Colonne de navigation (liste des questions) -->
     <aside id="question-nav-container" class="collapsed">
       <button id="toggle-nav">Voir toutes mes réponses ▶</button>
       <ul id="question-nav"></ul>
     </aside>
 
-    <!-- Zone principale : affichage de la question courante -->
     <main id="main-content">
       <div id="app"></div>
     </main>
@@ -27,5 +23,8 @@
   <footer>
     <p class="tiny">© 2025 — Adaptation libre pour usage non commercial. Référence : Ritvo et al., 2011.</p>
   </footer>
+
+  <!-- Ici on place le script après tout le HTML -->
+  <script type="module" src="main.js"></script>
 </body>
 </html>
