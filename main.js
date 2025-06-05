@@ -120,7 +120,7 @@ function showResults(totals) {
     </ul>
     <h3>Score total : ${totals.total} / 240</h3>
     <p>${totals.total >= 65
-      ? '<span style="color:#007bff;font-weight:bold;">≥ 65 → traits autistiques probables</span>'
+      ? '<span style="color:#007bff;font-weight:bold;">= 65 → traits autistiques probables</span>'
       : '<span style="color:#ff8800;font-weight:bold;">Score inférieur au seuil clinique (65)</span>'}
     </p>
     <p class="note">Ce test est un outil de dépistage et ne remplace pas un diagnostic clinique.</p>
@@ -206,10 +206,19 @@ summary.appendChild(toggleText);
     doc.text(`Score total : ${totals.total} / 240`, 10, y);
     y += 10;
 
-    doc.setFont("helvetica", "italic");
-    doc.text(totals.total >= 65
-      ? "≥ 65 → Traits autistiques probables"
-      : "Score inférieur au seuil clinique (65)", 10, y);
+    doc.setFont("helvetica", "bold");
+doc.setFontSize(12);
+
+if (totals.total >= 65) {
+  doc.setTextColor(0, 102, 204); // bleu
+  doc.text(">= 65 → Traits autistiques probables", 10, y);
+} else {
+  doc.setTextColor(255, 102, 0); // orange
+  doc.text("Score inférieur au seuil clinique (65)", 10, y);
+}
+
+doc.setTextColor(0, 0, 0); // reset noir
+
 
     y += 20;
     doc.setFont("helvetica", "normal");
