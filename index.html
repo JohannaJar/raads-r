@@ -8,90 +8,80 @@
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
-  <!-- Style -->
+  <!-- Feuille de style -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- jsPDF -->
+  <!-- jsPDF (bibliothèque pour générer le PDF) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- Script principal (non-module, defer) -->
+  <!-- Script principal -->
   <script src="main.js" defer></script>
 </head>
-
 <body>
   <!-- ─── En-tête ─── -->
   <header>
     <h1>Test RAADS-R (version française)</h1>
     <p class="subtitle">
-      Le RAADS-R est un test conçu pour aider les adultes à savoir s’ils présentent des signes d’autisme qui passent souvent inaperçus.
+      Un outil de dépistage des traits autistiques chez l’adulte – Résultat instantané, totalement gratuit.
     </p>
-    <ul class="no-bullet">
-      <li>• <strong>Durée : 10 à 30 minutes</strong>
-      <li>• <strong>100% gratuit</strong>
-      <li>• <strong>Résultats téléchargeables en PDF en fin de test</strong></li>
-
-    </ul>
   </header>
 
- <!-- ─── À propos ─── -->
-<section id="about" class="container">
-  <h2>Qu’est-ce que le RAADS-R&nbsp;?</h2>
-  <p>
-    Le RAADS-R (Ritvo Autism &amp; Asperger Diagnostic Scale&nbsp;– Revised) est un
-    questionnaire validé pour mettre en évidence, chez l’adulte, des traits compatibles
-    avec un trouble du spectre autistique&nbsp;(TSA). Il comporte 80 affirmations réparties
-    en quatre domaines&nbsp;:
-  </p>
-  <ul class="no-bullet">
-    <li>• <strong>Social relatedness</strong> – compétences sociales, empathie</li>
-    <li>• <strong>Circumscribed interests</strong> – centres d’intérêt restreints/intérêts spécifiques</li>
-    <li>• <strong>Language</strong> – usage et nuances du langage</li>
-    <li>• <strong>Sensory-motor</strong> – traitements sensoriels, coordination</li>
-  </ul>
-  <p>
-    Un score total ≥ 65/240 suggère une probabilité élevée de TSA. Ce test est un
-    <strong>outil de dépistage</strong> ; seul un professionnel peut établir
-    un diagnostic.
-  </p>
-  <p class="note">
-    Certaines affirmations peuvent paraître floues ou difficiles à relier à votre vécu.  
-    Il est parfois compliqué de choisir une réponse qui semble parfaitement juste.  
-    Malgré cela, le RAADS–R reste un outil reconnu avec un bon taux de détection des traits autistiques.  
-    Il ne remplace pas un diagnostic, mais peut être une première étape utile dans un parcours de compréhension de soi.
-  </p>
-  <p class="tiny">
-    Auteure principale : <a href="https://medicine.yale.edu/profile/ariella-ritvo/" target="_blank" rel="noopener noreferrer">
-    Dr Riva Ariella Ritvo</a>
-  </p>
-</section>
+  <!-- ─── À propos ─── -->
+  <section id="about" class="container">
+    <h2>Qu’est-ce que le RAADS-R&nbsp;?</h2>
+    <p>
+      Le RAADS-R (Ritvo Autism &amp; Asperger Diagnostic Scale&nbsp;– Revised) est un questionnaire 
+      validé pour mettre en évidence, chez l’adulte, des traits compatibles avec un trouble 
+      du spectre autistique&nbsp;(TSA). Il comporte 80 affirmations réparties en quatre domaines&nbsp;:
+    </p>
+    <ul class="no-bullet">
+      <li>• <strong>Social relatedness</strong> – compétences sociales, empathie</li>
+      <li>• <strong>Circumscribed interests</strong> – centres d’intérêt restreints</li>
+      <li>• <strong>Language</strong> – usage et nuances du langage</li>
+      <li>• <strong>Sensory-motor</strong> – traitements sensoriels, coordination</li>
+    </ul>
+    <p>
+      Un score total ≥ 65/240 suggère une probabilité élevée de TSA. Ce test est un 
+      <strong>outil de dépistage</strong> ; seul un professionnel peut établir un diagnostic.
+    </p>
+    <p class="note">
+      Certaines affirmations peuvent paraître floues ou difficiles à relier à votre vécu. 
+      Malgré cela, le RAADS–R reste un outil reconnu avec un bon taux de détection des 
+      traits autistiques. Il ne remplace pas un diagnostic, mais peut être une première 
+      étape utile dans un parcours de compréhension de soi.
+    </p>
+    <p class="tiny">
+      Auteure principale : 
+      <a href="https://medicine.yale.edu/profile/ariella-ritvo/" target="_blank" rel="noopener noreferrer">
+        Dr Riva Ariella Ritvo
+      </a>
+    </p>
+  </section>
 
   <!-- ─── Questionnaire ─── -->
   <section id="quiz" class="container">
     <h2>Répondez à chaque affirmation</h2>
     <form id="raadsr-form">
       <div id="questions-container"></div>
-
       <div class="submit-container">
         <button type="submit" id="submit-btn">Voir mes résultats</button>
       </div>
     </form>
   </section>
 
-  <!-- ─── Résultats ─── -->
+  <!-- ─── Résultats (après soumission du quiz) ─── -->
   <section id="results" class="container">
-    <!-- Carte de résultats -->
+    <!-- (A) Carte “Vos résultats” -->
     <div id="results-card-container"></div>
 
-    <!-- Résumé des réponses -->
+    <!-- (B) Résumé des réponses + bouton PDF + toggle -->
     <div id="answers-summary-container"></div>
 
-
-
-    <!-- Interprétation -->
+    <!-- (C) Explications : “Que signifient mes scores ?” -->
     <div class="results-interpretation">
-      <h3>Que signifient mes scores&nbsp;?</h3>
+      <h3>Que signifient mes scores ?</h3>
       <p>
-        Tout score <strong>≥ 65</strong> est compatible avec des traits autistiques.
+        Tout score <strong>≥ 65</strong> est compatible avec des traits autistiques. 
         Plus le score est élevé, plus les indices sont forts.
       </p>
       <table class="interpretation-table">
@@ -100,54 +90,68 @@
         </thead>
         <tbody>
           <tr><td>25</td><td>Probablement non autiste.</td></tr>
-          <tr><td>50</td><td>Quelques traits autistiques, mais probablement non autiste (certains autistes obtiennent jusqu’à 44).</td></tr>
+          <tr><td>50</td><td>Quelques traits autistiques, mais probablement non autiste.</td></tr>
           <tr><td>65</td><td>Seuil minimal envisageant l’autisme.</td></tr>
-          <tr><td>90</td><td>Indications plus marquées d’autisme (quelques non-autistes peuvent atteindre ce score).</td></tr>
+          <tr><td>90</td><td>Indications plus marquées d’autisme.</td></tr>
           <tr><td>130</td><td>Score moyen des personnes autistes ; forte présomption.</td></tr>
           <tr><td>160</td><td>Très forte probabilité de traits autistiques.</td></tr>
-          <tr><td>227</td><td>Score maximal observé dans l’étude de Ritvo&nbsp;et al.&nbsp;(2011).</td></tr>
+          <tr><td>227</td><td>Score maximal observé dans l’étude de Ritvo et al. (2011).</td></tr>
           <tr><td>240</td><td>Score maximal possible au RAADS-R.</td></tr>
         </tbody>
       </table>
       <p class="note">
-        Aucun test seul n’est définitif ; si vous vous reconnaissez malgré un score bas,
+        Aucun test seul n’est définitif ; si vous vous reconnaissez malgré un score bas, 
         consultez un·e professionnel·le.
       </p>
     </div>
 
-    <!-- Scores moyens -->
+    <!-- (D) Scores moyens RAADS-R -->
     <div class="results-comparison">
       <h3>Scores moyens RAADS-R</h3>
       <p>
-        Tableau tiré des données Embrace&nbsp;Autism (tests en ligne).
+        Le tableau ci-dessous présente les scores moyens totaux et sous-scores pour 
+        différentes populations, tels que rapportés par Embrace Autism en ligne.  
       </p>
       <ul class="no-bullet">
-        <li>• Personnes autistes diagnostiquées</li>
+        <li>• Personnes autistes diagnostiquées (hommes, femmes)</li>
         <li>• Personnes suspectées d’être autistes</li>
         <li>• Personnes neurotypiques (non autistes)</li>
       </ul>
-
       <table class="comparison-table">
         <thead>
           <tr>
-            <th>Groupe</th><th>Total</th><th>Langage</th>
-            <th>Relations&nbsp;sociales</th><th>Sensoriel-moteur</th><th>Intérêts&nbsp;circonscrits</th>
+            <th>Groupe</th><th>Score total</th><th>Langage</th>
+            <th>Relations sociales</th><th>Sensoriel/moteur</th><th>Centres d’intérêt restreints / intérêts spécifiques</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>Seuil clinique</td><td>65,0</td><td>4,0</td><td>31,0</td><td>16,0</td><td>15,0</td></tr>
-          <tr><td>Hommes autistes</td><td>148,6</td><td>11,9</td><td>71,3</td><td>36,7</td><td>28,7</td></tr>
-          <tr><td>Femmes autistes</td><td>160,4</td><td>12,8</td><td>73,5</td><td>43,1</td><td>31,0</td></tr>
-          <tr><td>Hommes suspectés</td><td>141,6</td><td>11,2</td><td>70,0</td><td>33,3</td><td>27,2</td></tr>
-          <tr><td>Femmes suspectées</td><td>145,2</td><td>11,3</td><td>67,2</td><td>38,7</td><td>28,0</td></tr>
-          <tr><td>Hommes neurotypiques</td><td>84,2</td><td>6,6</td><td>43,0</td><td>19,0</td><td>15,7</td></tr>
-          <tr><td>Femmes neurotypiques</td><td>91,6</td><td>6,8</td><td>42,8</td><td>24,8</td><td>17,2</td></tr>
+          <tr>
+            <td>Seuil clinique</td><td>65,0</td><td>4,0</td><td>31,0</td><td>16,0</td><td>15,0</td>
+          </tr>
+          <tr>
+            <td>Hommes autistes</td><td>148,6</td><td>11,9</td><td>71,3</td><td>36,7</td><td>28,7</td>
+          </tr>
+          <tr>
+            <td>Femmes autistes</td><td>160,4</td><td>12,8</td><td>73,5</td><td>43,1</td><td>31,0</td>
+          </tr>
+          <tr>
+            <td>Hommes suspectés d’être autistes</td><td>141,6</td><td>11,2</td><td>70,0</td><td>33,3</td><td>27,2</td>
+          </tr>
+          <tr>
+            <td>Femmes suspectées d’être autistes</td><td>145,2</td><td>11,3</td><td>67,2</td><td>38,7</td><td>28,0</td>
+          </tr>
+          <tr>
+            <td>Hommes neurotypiques</td><td>84,2</td><td>6,6</td><td>43,0</td><td>19,0</td><td>15,7</td>
+          </tr>
+          <tr>
+            <td>Femmes neurotypiques</td><td>91,6</td><td>6,8</td><td>42,8</td><td>24,8</td><td>17,2</td>
+          </tr>
         </tbody>
       </table>
       <p class="note">
-        Les scores « neurotypiques » en ligne sont souvent surélevés
-        (auto-sélection des participant·es). Les valeurs issues de la littérature
-        clinique restent les plus fiables.
+        Dans l’étude en ligne, les scores “neurotypiques” peuvent être surévalués ; 
+        les valeurs issues de la recherche clinique (Ritvo et al., 2011) sont souvent 
+        plus fiables.
       </p>
     </div>
   </section>
@@ -155,8 +159,8 @@
   <!-- ─── Pied de page ─── -->
   <footer class="container">
     <p class="tiny">
-      © 2025 — Adaptation libre, usage non-commercial.  
-      Basé sur Ritvo&nbsp;R.A.&nbsp;et al.&nbsp;(2011).  
+      © 2025 — Adaptation libre pour usage non-commercial.  
+      Basé sur : Ritvo R.A. et al. (2011).  
       Ce test ne remplace pas un diagnostic clinique.
     </p>
   </footer>
