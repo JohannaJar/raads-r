@@ -1,14 +1,15 @@
-// main.js (version avancée avec navigation)
-// -------------------------------------------------
-// 1. Variables globales
-let dataGlobal;        // contiendra { questions, normative, subscales }
+// main.js (version avec navigation et “defer” dans index.html)
+// ------------------------------------------------------------
+
+// Variables globales
+let dataGlobal;              // contiendra { questions, normative, subscales }
 const app = document.getElementById('app');
 const navList = document.getElementById('question-nav');
 const toggleNavBtn = document.getElementById('toggle-nav');
-let current = 0;       // index de la question en cours (0 à 79)
-const answers = new Array(80).fill(null); // conserve la réponse (0,1,2 ou 3) ou null si non renseignée
+let current = 0;             // index de la question en cours (0 à 79)
+const answers = new Array(80).fill(null); // conserve la réponse ou null
 
-// 2. Charger le JSON au démarrage
+// 1. Chargement du JSON au démarrage
 async function loadData() {
   try {
     const response = await fetch('questions.json');
@@ -16,24 +17,29 @@ async function loadData() {
       throw new Error(`Erreur HTTP ${response.status}`);
     }
     dataGlobal = await response.json();
-    initNav();        // initialiser la liste de navigation
-    renderQuestion(); // afficher la question 1
+    initNav();         // créer les 80 boutons Q1…Q80
+    renderQuestion();  // afficher la première question
   } catch (err) {
-    app.innerHTML = `<p class="note">Impossible de charger les questions : ${err.message}</p>`;
+    // Si element #app est null, la page n’a pas encore chargé le DOM (mais on a "defer", donc ça ne devrait plus arriver).
+    if (app) {
+      app.innerHTML = `<p class="note">Impossible de charger les questions : ${err.message}</p>`;
+    } else {
+      console.error("Le <div id='app'> est introuvable. Vérifiez index.html.");
+    }
   }
 }
 
-// 3. Initialiser la navigation (colonne de gauche)
+// 2. Création dynamique de la colonne de navigation
 function initNav() {
   const { questions } = dataGlobal;
-  navList.innerHTML = ''; // vider la liste au cas où
+  navList.innerHTML = ''; // vider la liste si elle existait
 
   questions.forEach((_, idx) => {
     const li = document.createElement('li');
     const btn = document.createElement('button');
     btn.textContent = `Q${idx + 1}`;
     btn.id = `nav-btn-${idx}`;
-    btn.classList.add('unanswered'); // par défaut, non répondu
+    btn.classList.add('unanswered'); // couleur rouge par défaut
     btn.onclick = () => {
       current = idx;
       renderQuestion();
@@ -42,42 +48,40 @@ function initNav() {
     navList.appendChild(li);
   });
 
-  // Bouton de bascule (afficher/cacher la navigation)
+  // Bouton pour déplier/ replier la colonne
   toggleNavBtn.onclick = () => {
-    document.getElementById('question-nav-container').classList.toggle('collapsed');
-    // changer le texte du bouton
-    const expanded = !document.getElementById('question-nav-container').classList.contains('collapsed');
-    toggleNavBtn.textContent = expanded 
-      ? 'Masquer mes réponses ◀' 
+    const navContainer = document.getElementById('question-nav-container');
+    navContainer.classList.toggle('collapsed');
+    const visible = !navContainer.classList.contains('collapsed');
+    toggleNavBtn.textContent = visible
+      ? 'Masquer mes réponses ◀'
       : 'Voir toutes mes réponses ▶';
   };
 }
 
-// 4. Afficher la question courante
+// 3. Afficher la question “current”
 function renderQuestion() {
-  app.innerHTML = ''; // on vide la zone
+  app.innerHTML = ''; // on vide la zone de contenu
 
   const { questions, normative } = dataGlobal;
-  // Mettre à jour la classe CSS "current" sur la navigation
-  updateNavClasses();
+  updateNavClasses(); // met à jour les classes CSS dans la colonne
 
-  // Si on a épuisé toutes les questions → afficher les résultats
+  // Quand on a répondu à la dernière question, on affiche les résultats
   if (current >= questions.length) {
     showResults();
     return;
   }
 
-  // Création d'une carte "question"
+  // Création de la carte (DIV) pour la question courante
   const qDiv = document.createElement('div');
   qDiv.className = 'card';
 
-  // Titre et texte de la question
   qDiv.innerHTML = `
     <h2>Question ${current + 1} / ${questions.length}</h2>
     <p>${questions[current]}</p>
   `;
 
-  // Les 4 choix de réponse
+  // Les quatre boutons de réponse
   const choices = [
     'Vrai maintenant et avant 16 ans',
     'Vrai seulement maintenant',
@@ -85,82 +89,78 @@ function renderQuestion() {
     'Jamais vrai'
   ];
 
-  // Pour chaque choix, on crée un bouton
   choices.forEach((label, i) => {
     const btn = document.createElement('button');
     btn.textContent = label;
     btn.className = 'choice';
 
-    // Si l'utilisateur a déjà répondu à cette question, on peut pré-sélectionner le style
-    const prevAnswer = answers[current];
-    if (prevAnswer !== null && prevAnswer === mapAnswerToIndex(i, normative.includes(current))) {
-      btn.style.border = '2px solid #4285f4'; // indiquer la sélection actuelle
+    // Si l’utilisateur a déjà répondu à cette question, on entoure son choix
+    const prev = answers[current];
+    const isNorm = normative.includes(current);
+    const mapped = isNorm ? [0, 1, 2, 3][i] : [3, 2, 1, 0][i];
+    if (prev !== null && prev === mapped) {
+      btn.style.border = '2px solid #4285f4';
     }
 
-    btn.onclick = () => {
-      selectAnswer(i);
-    };
+    btn.onclick = () => selectAnswer(i);
     qDiv.appendChild(btn);
   });
 
-  // Ajout de la carte question dans la page
   app.appendChild(qDiv);
 }
 
-// 5. Mapper l’index du bouton sur des points (0 à 3)
-function mapAnswerToIndex(buttonIndex, isNormatif) {
-  // isNormatif = true → [0,1,2,3]
-  // sinon → [3,2,1,0]
-  return isNormatif 
-    ? [0, 1, 2, 3][buttonIndex]
-    : [3, 2, 1, 0][buttonIndex];
+// 4. Mapper l’index de bouton à un score (0–3)
+function mapAnswerToScore(buttonIdx, isNormatif) {
+  return isNormatif
+    ? [0, 1, 2, 3][buttonIdx]
+    : [3, 2, 1, 0][buttonIdx];
 }
 
-// 6. Lorsque l'utilisateur clique sur un choix
-function selectAnswer(buttonIndex) {
+// 5. Quand l’utilisateur clique sur un choix
+function selectAnswer(buttonIdx) {
   const isNorm = dataGlobal.normative.includes(current);
-  const score = mapAnswerToIndex(buttonIndex, isNorm);
-  answers[current] = score; // on mémorise la réponse
+  const score = mapAnswerToScore(buttonIdx, isNorm);
+  answers[current] = score;
 
-  // Mise à jour immédiate de la navigation (question répondue)
+  // Mettre à jour le bouton Qn dans la nav
   const navBtn = document.getElementById(`nav-btn-${current}`);
   navBtn.classList.remove('unanswered');
   navBtn.classList.add('answered');
 
-  // Garder la même question à l'écran pour que l'utilisateur puisse modifier si besoin,
-  // ou passer automatiquement à la question suivante. Ici, on passe à la suivante :
+  // Avancer à la question suivante si elle existe
   if (current < dataGlobal.questions.length - 1) {
     current++;
   }
   renderQuestion();
 }
 
-// 7. Mettre à jour les classes sur les boutons de nav (pour 'current', 'answered', 'unanswered')
+// 6. Mettre à jour les classes sur les boutons Qn pour "current"
 function updateNavClasses() {
   dataGlobal.questions.forEach((_, idx) => {
     const navBtn = document.getElementById(`nav-btn-${idx}`);
     navBtn.classList.remove('current');
-    // `answered` / `unanswered` sont gérés lors du selectAnswer
+    if (answers[idx] !== null) {
+      navBtn.classList.remove('unanswered');
+      navBtn.classList.add('answered');
+    }
     if (idx === current) {
       navBtn.classList.add('current');
     }
   });
 }
 
-// 8. Calculer et afficher les résultats finaux
+// 7. Calculer et afficher les résultats finaux
 function showResults() {
   const { subscales } = dataGlobal;
 
-  // Calcul des totaux
+  // Calcul des sous-scores + total
   const totals = {
-    total: answers.reduce((acc, val) => acc + (val !== null ? val : 0), 0),
+    total: answers.reduce((sum, v) => sum + (v !== null ? v : 0), 0),
     'Social relatedness': 0,
     'Circumscribed interests': 0,
     'Language': 0,
     'Sensory-motor': 0
   };
-
-  // Répartition par sous-échelle
   answers.forEach((score, idx) => {
     if (score !== null) {
       Object.entries(subscales).forEach(([name, indices]) => {
@@ -174,8 +174,6 @@ function showResults() {
   // Création de la carte "résultats"
   const resDiv = document.createElement('div');
   resDiv.className = 'card';
-
-  // Contenu HTML des résultats
   resDiv.innerHTML = `
     <h2>Résultats</h2>
     <ul>
@@ -186,26 +184,26 @@ function showResults() {
     </ul>
     <h3>Score total : ${totals.total} / 240</h3>
     <p>${
-      totals.total >= 65 
-        ? '<span style="color:green;">≥ 65 → traits autistiques probables</span>' 
+      totals.total >= 65
+        ? '<span style="color:green;">≥ 65 → traits autistiques probables</span>'
         : '<span style="color:orange;">Score inférieur au seuil clinique (65)</span>'
     }</p>
     <p class="note">Ce test est un outil de dépistage et ne remplace pas un diagnostic clinique.</p>
     <button id="restart" class="choice">Recommencer le test</button>
   `;
 
-  app.innerHTML = ''; // vider la zone actuelle
+  // On remplace complètement la zone <div id="app"> par la carte des résultats
+  app.innerHTML = '';
   document.getElementById('main-content').appendChild(resDiv);
 
-  // Bouton "Recommencer" : recharge la page
+  // Cacher la navigation
+  document.getElementById('question-nav-container').classList.add('collapsed');
+  toggleNavBtn.textContent = 'Voir toutes mes réponses ▶';
+
   document.getElementById('restart').onclick = () => {
     location.reload();
   };
-
-  // Cacher la navigation pour laisser place aux résultats
-  document.getElementById('question-nav-container').classList.add('collapsed');
-  toggleNavBtn.textContent = 'Voir toutes mes réponses ▶';
 }
 
-// 9. Lancer le chargement des données au démarrage
+// 8. On démarre tout en appelant la première fois loadData()
 loadData();
