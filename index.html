@@ -8,7 +8,7 @@
   <script type="module" src="main.js" defer></script>
 </head>
 <body>
-  <!-- En-tête principale -->
+  <!-- ─── En-tête principal ─── -->
   <header>
     <h1>Test RAADS-R (version française)</h1>
     <p class="subtitle">
@@ -16,7 +16,7 @@
     </p>
   </header>
 
-  <!-- Section explicative (facultative, mais recommandée) -->
+  <!-- ─── Section explicative “À propos” ─── -->
   <section id="about" class="container">
     <h2>Qu’est-ce que le RAADS-R ?</h2>
     <p>
@@ -37,13 +37,12 @@
     </p>
   </section>
 
-  <!-- Section principale : formulaire du questionnaire -->
+  <!-- ─── Section Quiz (questions + formulaire) ─── -->
   <section id="quiz" class="container">
     <h2>Répondez à chaque affirmation</h2>
     <form id="raadsr-form">
-      <!-- Les 80 questions seront injectées ici par main.js -->
+      <!-- Ici, main.js va injecter 80 cartes “question-card” -->
       <div id="questions-container"></div>
-
       <!-- Bouton pour soumettre et voir les résultats -->
       <div class="submit-container">
         <button type="submit" id="submit-btn">Voir mes résultats</button>
@@ -51,191 +50,169 @@
     </form>
   </section>
 
-  <!-- ─────────── Section des résultats ─────────── -->
-<section id="results" class="container">
-  <!-- (A) Conteneur dans lequel on injectera la carte de résultats -->
-  <div id="results-card-container"></div>
-<!-- ─────────── Section des résultats ─────────── -->
-<section id="results" class="container">
+  <!-- ─── Section Résultats ─── -->
+  <section id="results" class="container">
+    <!-- (A) CONTAINER pour la carte de résultats -->
+    <div id="results-card-container"></div>
 
-  <!-- (A) Conteneur pour la carte de résultats générée par JS -->
-  <div id="results-card-container"></div>
+    <!-- (B) CONTAINER pour le résumé des réponses (questions + réponses) -->
+    <div id="answers-summary-container"></div>
 
-  <!-- (B) Conteneur pour la liste des questions + réponses -->
-  <div id="answers-summary-container"></div>
+    <!-- (C) Section “Que signifient mes scores ?” (statique) -->
+    <div class="results-interpretation">
+      <h3>Que signifient mes scores ?</h3>
+      <p>
+        Tout score <strong>égal ou supérieur à 65</strong> est compatible avec des traits autistiques.  
+        Plus votre score augmente, plus il y a d’indices de traits autistiques.  
+        Le tableau ci-dessous présente des repères généraux pour interpréter votre score total au RAADS-R :
+      </p>
+      <table class="interpretation-table">
+        <thead>
+          <tr>
+            <th>Score total</th>
+            <th>Interprétation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>25</td>
+            <td>Probablement non autiste.</td>
+          </tr>
+          <tr>
+            <td>50</td>
+            <td>Quelques traits autistiques, mais probablement non autiste 
+                (certains autistes peuvent obtenir jusqu’à 44).</td>
+          </tr>
+          <tr>
+            <td>65</td>
+            <td>Seuil minimal à partir duquel l’autisme est envisagé.</td>
+          </tr>
+          <tr>
+            <td>90</td>
+            <td>Indications plus marquées d’autisme, bien que certaines personnes non autistes puissent atteindre ce score.</td>
+          </tr>
+          <tr>
+            <td>130</td>
+            <td>Score moyen des personnes autistes ; preuve forte en faveur d’un TSA.</td>
+          </tr>
+          <tr>
+            <td>160</td>
+            <td>Très forte probabilité de traits autistiques.</td>
+          </tr>
+          <tr>
+            <td>227</td>
+            <td>Score maximal observé chez les autistes dans l’étude de Ritvo et al. (2011).</td>
+          </tr>
+          <tr>
+            <td>240</td>
+            <td>Score maximal possible au RAADS-R.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note">
+        Aucun test seul n’est définitif : si vous obtenez un score faible mais pensez être autiste, 
+        n’hésitez pas à passer d’autres questionnaires ou à consulter un professionnel spécialisé.
+      </p>
+    </div>
 
-  <!-- (C) Section “Que signifient mes scores ?” -->
-  <div class="results-interpretation">
-    <!-- … contenu existant … -->
-  </div>
+    <!-- (D) Section “Scores moyens RAADS-R” (statique) -->
+    <div class="results-comparison">
+      <h3>Scores moyens RAADS-R</h3>
+      <p>
+        Le tableau ci-dessous présente les scores moyens totaux et sous-scores pour différentes populations, 
+        tels que rapportés par Embrace Autism dans leur étude en ligne.  
+        Vous pouvez ainsi comparer vos résultats à ceux observés chez :
+      </p>
+      <ul class="no-bullet">
+        <li>• Personnes autistes diagnostiquées (hommes, femmes)</li>
+        <li>• Personnes suspectées d’être autistes</li>
+        <li>• Personnes neurotypiques (non autistes)</li>
+      </ul>
 
-  <!-- (D) Section “Scores moyens RAADS-R” -->
-  <div class="results-comparison">
-    <!-- … contenu existant … -->
-  </div>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Groupe</th>
+            <th>Score total</th>
+            <th>Langage</th>
+            <th>Relations sociales</th>
+            <th>Sensoriel/moteur</th>
+            <th>Intérêts circonscrits</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Valeurs seuils de l’autisme</td>
+            <td>65,0</td>
+            <td>4,0</td>
+            <td>31,0</td>
+            <td>16,0</td>
+            <td>15,0</td>
+          </tr>
+          <tr>
+            <td>Hommes autistes</td>
+            <td>148,6</td>
+            <td>11,9</td>
+            <td>71,3</td>
+            <td>36,7</td>
+            <td>28,7</td>
+          </tr>
+          <tr>
+            <td>Femmes autistes</td>
+            <td>160,4</td>
+            <td>12,8</td>
+            <td>73,5</td>
+            <td>43,1</td>
+            <td>31,0</td>
+          </tr>
+          <tr>
+            <td>Hommes suspectés d’être autistes</td>
+            <td>141,6</td>
+            <td>11,2</td>
+            <td>70,0</td>
+            <td>33,3</td>
+            <td>27,2</td>
+          </tr>
+          <tr>
+            <td>Femmes suspectées d’être autistes</td>
+            <td>145,2</td>
+            <td>11,3</td>
+            <td>67,2</td>
+            <td>38,7</td>
+            <td>28,0</td>
+          </tr>
+          <tr>
+            <td>Hommes neurotypiques</td>
+            <td>84,2</td>
+            <td>6,6</td>
+            <td>43,0</td>
+            <td>19,0</td>
+            <td>15,7</td>
+          </tr>
+          <tr>
+            <td>Femmes neurotypiques</td>
+            <td>91,6</td>
+            <td>6,8</td>
+            <td>42,8</td>
+            <td>24,8</td>
+            <td>17,2</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note">
+        Remarque : dans l’étude en ligne, les scores « neurotypiques » peuvent paraître élevés
+        car certaines personnes non diagnostiquées se découvrent ensuite des traits autistiques.  
+        Les valeurs issues de la recherche clinique (Ritvo et al., 2011) restent les plus fiables.
+      </p>
+    </div>
 
-  <!-- (E) Bouton “Télécharger mes résultats en PDF” -->
-  <div class="pdf-button-container">
-    <button id="download-pdf-btn" class="pdf-btn">Télécharger mes résultats en PDF</button>
-  </div>
-</section>
+    <!-- (E) Bouton “Télécharger mes résultats en PDF” -->
+    <div class="pdf-button-container">
+      <button id="download-pdf-btn" class="pdf-btn">Télécharger mes résultats en PDF</button>
+    </div>
+  </section>
 
-  <!-- (B) Section “Que signifient mes scores ?” (statique) -->
-  <div class="results-interpretation">
-    <h3>Que signifient mes scores ?</h3>
-    <p>
-      Tout score <strong>égal ou supérieur à 65</strong> est compatible avec des traits autistiques.  
-      Plus votre score augmente, plus il y a d’indices de traits autistiques.  
-      Le tableau ci-dessous présente des repères généraux pour interpréter votre score total au RAADS-R :
-    </p>
-    <table class="interpretation-table">
-      <thead>
-        <tr>
-          <th>Score total</th>
-          <th>Interprétation</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>25</td>
-          <td>Probablement pas autiste.</td>
-        </tr>
-        <tr>
-          <td>50</td>
-          <td>Quelques traits autistiques, mais probablement pas autiste.</td>
-        </tr>
-        <tr>
-          <td>65</td>
-          <td>Seuil minimal à partir duquel l’autisme est envisagé.</td>
-        </tr>
-        <tr>
-          <td>90</td>
-          <td>Indications plus marquées d’autisme, bien que certaines personnes non autistes puissent atteindre ce score.</td>
-        </tr>
-        <tr>
-          <td>130</td>
-          <td>Score moyen des personnes autistes ; preuve forte en faveur d’un TSA.</td>
-        </tr>
-        <tr>
-          <td>160</td>
-          <td>Très forte probabilité de traits autistiques.</td>
-        </tr>
-        <tr>
-          <td>227</td>
-          <td>Score maximal observé chez les autistes dans l’étude de Ritvo et al. (2011).</td>
-        </tr>
-        <tr>
-          <td>240</td>
-          <td>Score maximal possible au RAADS-R.</td>
-        </tr>
-      </tbody>
-    </table>
-    <p class="note">
-      Aucun test seul n’est définitif : si vous obtenez un score faible mais pensez être autiste, 
-      n’hésitez pas à passer d’autres questionnaires ou à consulter un professionnel spécialisé.
-    </p>
-  </div>
-
-  <!-- (C) Section “Scores moyens RAADS-R” (statique) -->
-  <div class="results-comparison">
-    <h3>Scores moyens RAADS-R</h3>
-    <p>
-      Le tableau ci-dessous présente les scores moyens totaux et sous-scores pour différentes populations, 
-      tels que rapportés par Embrace Autism dans leur étude en ligne.  
-      Vous pouvez ainsi comparer vos résultats à ceux observés chez :
-    </p>
-    <ul class="no-bullet">
-      <li>• Personnes autistes diagnostiquées (hommes, femmes)</li>
-      <li>• Personnes suspectées d’être autistes</li>
-      <li>• Personnes neurotypiques (non autistes)</li>
-    </ul>
-
-    <table class="comparison-table">
-      <thead>
-        <tr>
-          <th>Groupe</th>
-          <th>Score total</th>
-          <th>Langage</th>
-          <th>Relations sociales</th>
-          <th>Sensoriel/moteur</th>
-          <th>Intérêts circonscrits</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Valeurs seuils de l’autisme</td>
-          <td>65,0</td>
-          <td>4,0</td>
-          <td>31,0</td>
-          <td>16,0</td>
-          <td>15,0</td>
-        </tr>
-        <tr>
-          <td>Hommes autistes</td>
-          <td>148,6</td>
-          <td>11,9</td>
-          <td>71,3</td>
-          <td>36,7</td>
-          <td>28,7</td>
-        </tr>
-        <tr>
-          <td>Femmes autistes</td>
-          <td>160,4</td>
-          <td>12,8</td>
-          <td>73,5</td>
-          <td>43,1</td>
-          <td>31,0</td>
-        </tr>
-        <tr>
-          <td>Hommes suspectés d’être autistes</td>
-          <td>141,6</td>
-          <td>11,2</td>
-          <td>70,0</td>
-          <td>33,3</td>
-          <td>27,2</td>
-        </tr>
-        <tr>
-          <td>Femmes suspectées d’être autistes</td>
-          <td>145,2</td>
-          <td>11,3</td>
-          <td>67,2</td>
-          <td>38,7</td>
-          <td>28,0</td>
-        </tr>
-        <tr>
-          <td>Hommes neurotypiques</td>
-          <td>84,2</td>
-          <td>6,6</td>
-          <td>43,0</td>
-          <td>19,0</td>
-          <td>15,7</td>
-        </tr>
-        <tr>
-          <td>Femmes neurotypiques</td>
-          <td>91,6</td>
-          <td>6,8</td>
-          <td>42,8</td>
-          <td>24,8</td>
-          <td>17,2</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p class="note">
-      Remarque : dans l’étude en ligne, les scores « neurotypiques » peuvent paraître élevés
-      car certaines personnes non diagnostiquées se découvrent ensuite des traits autistiques.  
-      Les valeurs issues de la recherche clinique (Ritvo et al., 2011) restent les plus fiables.
-    </p>
-  </div>
-
-  <!-- (D) Bouton « Télécharger en PDF » qui appelle window.print() -->
-  <div class="pdf-button-container">
-  <button id="download-pdf-btn" class="pdf-btn">Télécharger mes résultats en PDF</button>
-</div>
-</section>
-
-
-  <!-- Pied de page -->
+  <!-- ─── Pied de page ─── -->
   <footer class="container">
     <p class="tiny">
       © 2025 — Adaptation libre pour usage non-commercial.  
