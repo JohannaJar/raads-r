@@ -1,11 +1,15 @@
 // main.js (version compatible GitHub Pages)
-let dataGlobal; // contiendra questions, normative, subscales
+// -------------------------------------------------
+// Charge et affiche le questionnaire RAADS-R (80 items)
+// avec cotation et page de résultats.
 
+// Variables globales
+let dataGlobal; // contiendra { questions, normative, subscales }
 const app = document.getElementById('app');
-let current = 0;
-const answers = [];
+let current = 0;        // index de la question en cours
+const answers = [];     // stocke les scores de chaque réponse
 
-// 1. Charger le JSON au démarrage
+// 1. Fonction d'initialisation : charger questions.json
 async function loadData() {
   try {
     const response = await fetch('questions.json');
@@ -15,24 +19,28 @@ async function loadData() {
     dataGlobal = await response.json();
     renderQuestion();
   } catch (err) {
-    app.innerHTML = `<p>Impossible de charger les questions : ${err.message}</p>`;
+    app.innerHTML = `<p class="note">Impossible de charger les questions : ${err.message}</p>`;
   }
 }
 
 // 2. Afficher la question courante
 function renderQuestion() {
-  app.innerHTML = '';
+  app.innerHTML = ''; // on vide la zone
 
   const { questions, normative } = dataGlobal;
+  // Si on a épuisé toutes les questions, on affiche les résultats
   if (current >= questions.length) {
     showResults();
     return;
   }
 
-  const q = document.createElement('div');
-  q.className = 'card';
-  q.innerHTML = `
-    <h2>Question ${current + 1}/${questions.length}</h2>
+  // Création d'une carte "question"
+  const qDiv = document.createElement('div');
+  qDiv.className = 'card';
+
+  // Titre et texte de la question
+  qDiv.innerHTML = `
+    <h2>Question ${current + 1} / ${questions.length}</h2>
     <p>${questions[current]}</p>
   `;
 
@@ -44,71 +52,87 @@ function renderQuestion() {
     'Jamais vrai'
   ];
 
+  // Pour chaque choix, on crée un bouton
   choices.forEach((label, i) => {
     const btn = document.createElement('button');
     btn.textContent = label;
     btn.className = 'choice';
     btn.onclick = () => selectAnswer(i);
-    q.appendChild(btn);
+    qDiv.appendChild(btn);
   });
 
-  app.appendChild(q);
+  // Ajout de la carte question dans la page
+  app.appendChild(qDiv);
 }
 
-// 3. Enregistrer la réponse et passer à la suivante
+// 3. Lorsque l'utilisateur clique sur un choix
 function selectAnswer(index) {
   const { normative } = dataGlobal;
+  // Vérifier si cet item est "normatif" (notation inversée)
   const isNorm = normative.includes(current);
-  const mapping = isNorm ? [0, 1, 2, 3] : [3, 2, 1, 0];
-  answers.push(mapping[index]);
+  // Mapping des points selon type
+  //   - si symptomatique : réponses [0,1,2,3] → [3,2,1,0]
+  //   - si normatif      : [0,1,2,3] → [0,1,2,3]
+  const scoreMap = isNorm ? [0, 1, 2, 3] : [3, 2, 1, 0];
+  const pts = scoreMap[index];
+  answers.push(pts);
+
+  // Passer à la question suivante
   current++;
   renderQuestion();
 }
 
-// 4. Calculer et afficher les résultats
+// 4. Calculer et afficher les résultats finaux
 function showResults() {
   const { subscales } = dataGlobal;
-  // Initialiser scores
+
+  // Initialiser les totaux
   const totals = {
-    total: 0,
+    total: answers.reduce((acc, val) => acc + val, 0),
     'Social relatedness': 0,
     'Circumscribed interests': 0,
     'Language': 0,
     'Sensory-motor': 0
   };
 
-  // Somme totale
-  totals.total = answers.reduce((a, b) => a + b, 0);
-
-  // Sous-scores
+  // Répartition par sous-échelle
   answers.forEach((score, idx) => {
-    Object.entries(subscales).forEach(([name, list]) => {
-      if (list.includes(idx)) {
+    Object.entries(subscales).forEach(([name, indices]) => {
+      if (indices.includes(idx)) {
         totals[name] += score;
       }
     });
   });
 
-  // Construction de l'affichage des résultats
-  const container = document.createElement('div');
-  container.innerHTML = `
+  // Création de la carte "résultats"
+  const resDiv = document.createElement('div');
+  resDiv.className = 'card';
+
+  // Contenu HTML des résultats
+  resDiv.innerHTML = `
     <h2>Résultats</h2>
     <ul>
-      <li>Social : ${totals['Social relatedness']}</li>
-      <li>Intérêts circonscrits : ${totals['Circumscribed interests']}</li>
-      <li>Langage : ${totals['Language']}</li>
-      <li>Sensori-moteur : ${totals['Sensory-motor']}</li>
+      <li><strong>Social relatedness :</strong> ${totals['Social relatedness']}</li>
+      <li><strong>Circumscribed interests :</strong> ${totals['Circumscribed interests']}</li>
+      <li><strong>Language :</strong> ${totals['Language']}</li>
+      <li><strong>Sensory-motor :</strong> ${totals['Sensory-motor']}</li>
     </ul>
-    <h3>Score total : ${totals.total} / ${answers.length * 3}</h3>
-    <p>${totals.total >= 65 ? '≥ 65 → traits autistiques probables' 
-                           : 'Score inférieur au seuil clinique (65)'}</p>
+    <h3>Score total : ${totals.total} / 240</h3>
+    <p>${totals.total >= 65 
+      ? '<span style="color:green;">≥ 65 → traits autistiques probables</span>' 
+      : '<span style="color:orange;">Score inférieur au seuil clinique (65)</span>'}
+    </p>
     <p class="note">Ce test est un outil de dépistage et ne remplace pas un diagnostic clinique.</p>
-    <button id="restart">Recommencer</button>
+    <button id="restart" class="choice">Recommencer le test</button>
   `;
-  app.innerHTML = '';
-  app.appendChild(container);
-  document.getElementById('restart').onclick = () => location.reload();
+
+  app.appendChild(resDiv);
+
+  // Bouton "Recommencer" : recharge la page
+  document.getElementById('restart').onclick = () => {
+    location.reload();
+  };
 }
 
-// 5. Démarrer tout de suite la lecture du JSON
+// 5. Lancer le chargement des données au démarrage
 loadData();
