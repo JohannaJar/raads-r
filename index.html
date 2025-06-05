@@ -3,109 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Test RAADS-R gratuit en ligne (version française)</title>
+  <title>Test RAADS-R gratuit (version française)</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- On utilise 'defer' pour être sûr que le DOM est totalement chargé -->
   <script type="module" src="main.js" defer></script>
 </head>
 <body>
-  <!-- En-tête principal -->
-  <header id="header">
+  <!-- En-tête principale -->
+  <header>
     <h1>Test RAADS-R (version française)</h1>
     <p class="subtitle">
-      Un outil de dépistage des traits autistiques chez l’adulte – résultat instantané, totalement gratuit.
+      Un outil de dépistage des traits autistiques chez l’adulte – Résultat instantané, totalement gratuit.
     </p>
   </header>
 
-  <!-- Section 1 : À propos du RAADS-R -->
-  <section id="about-test" class="container">
-    <h2>À propos du RAADS-R</h2>
+  <!-- Section explicative (facultative, mais recommandée) -->
+  <section id="about" class="container">
+    <h2>Qu’est-ce que le RAADS-R ?</h2>
     <p>
-      Le RAADS-R (Ritvo Autism & Asperger Diagnostic Scale – Revised) est un questionnaire 
-      validé scientifiquement pour mettre en évidence, chez l’adulte, les traitements cognitifs 
-      et sensoriels associés aux troubles du spectre autistique (TSA). Développé en 2011, ce test 
-      ne remplace pas un diagnostic clinique, mais sert d’outil complémentaire de dépistage.  
-      <strong>Objectif :</strong> aider à détecter précocement des signes compatibles avec un TSA, 
-      afin de guider vers une évaluation spécialisée si nécessaire.
+      Le RAADS-R (Ritvo Autism &amp; Asperger Diagnostic Scale – Revised) est un questionnaire validé
+      scientifiquement pour détecter, chez l’adulte, des traits compatibles avec un trouble du spectre
+      autistique (TSA). Il comporte 80 affirmations réparties en quatre domaines :
     </p>
+    <ul class="no-bullet">
+      <li>• <strong>Social relatedness</strong> (compétences sociales, empathie)</li>
+      <li>• <strong>Circumscribed interests</strong> (centres d’intérêt restreints)</li>
+      <li>• <strong>Language</strong> (usage et nuances du langage)</li>
+      <li>• <strong>Sensory-motor</strong> (traitements sensoriels, coordination)</li>
+    </ul>
     <p>
-      Le questionnaire comprend 80 affirmations réparties en quatre domaines :  
-      <ul class="no-bullet">
-        <li>• <strong>Social relatedness</strong> (aptitudes sociales et empathie)</li>
-        <li>• <strong>Circumscribed interests</strong> (centres d’intérêt restreints)</li>
-        <li>• <strong>Language</strong> (usage et nuance du langage)</li>
-        <li>• <strong>Sensory-motor</strong> (sensations et coordination)</li>
-      </ul>
-    </p>
-    <p>
-      Les études de validation montrent qu’un score total ≥ 65/240 est associé à une probabilité 
-      élevée de TSA. Toutefois, seul un professionnel de santé sur le plan clinique ou psychologique 
-      peut établir un diagnostic définitif.
+      Un score total ≥ 65/240 est associé à une probabilité élevée de TSA, mais seul un professionnel
+      peut poser le diagnostic officiel. Ce test sert de dépistage, **il n’a pas vocation à remplacer
+      une évaluation clinique**.
     </p>
   </section>
 
-  <!-- Section 2 : Comment utiliser ce test -->
-  <section id="how-to-use" class="container">
-    <h2>Comment utiliser ce test</h2>
-    <ol>
-      <li>
-        <strong>Lisez attentivement chaque affirmation</strong> : il s’agit de déclarations portant 
-        sur votre comportement « maintenant » et/ou « avant 16 ans ».
-      </li>
-      <li>
-        Pour chaque affirmation, choisissez la réponse qui correspond le mieux à votre situation.  
-        Les quatre options sont :  
-        <ul class="no-bullet">
-          <li>– <em>Vrai maintenant et avant 16 ans</em></li>
-          <li>– <em>Vrai seulement maintenant</em></li>
-          <li>– <em>Vrai seulement avant 16 ans</em></li>
-          <li>– <em>Jamais vrai</em></li>
-        </ul>
-      </li>
-      <li>
-        Les <strong>items normatifs</strong> (17 questions) sont cotés de façon inversée : 
-        l’échelle de points va de 0 à 3, selon l’ancienneté et la pertinence de la réponse.  
-        Les <strong>63 autres questions</strong> sont cotées de 3 à 0.  
-        (Le détail de la cotation est automatique : vous n’avez rien à calculer.)
-      </li>
-      <li>
-        <strong>Vous pouvez naviguer de question en question</strong> à l’aide du menu à gauche :  
-        si vous souhaitez revenir sur une réponse déjà donnée, il suffit de cliquer sur « Qn » 
-        dans la colonne.  
-      </li>
-      <li>
-        Une fois les 80 questions remplies, la page de résultats s’affichera automatiquement, 
-        avec :
-        <ul class="no-bullet">
-          <li>• Les scores par sous-échelle (Social, Centres d’intérêt, Langage, Sensori-moteur)</li>
-          <li>• Le score total sur 240</li>
-          <li>• Une interprétation simple : « ≥ 65 → traits autistiques probables » ou 
-          « score inférieur au seuil »</li>
-        </ul>
-      </li>
-      <li>
-        <strong>Important : </strong>ce test est un simple outil de dépistage.  
-        <strong>Ne modifiez pas vos traitements médicaux</strong> sans avis d’un professionnel et 
-        ne prenez pas ce questionnaire pour un diagnostic.  
-      </li>
-    </ol>
+  <!-- Section principale : formulaire du questionnaire -->
+  <section id="quiz" class="container">
+    <h2>Répondez à chaque affirmation</h2>
+    <form id="raadsr-form">
+      <!-- Les 80 questions seront injectées ici par main.js -->
+      <div id="questions-container"></div>
+
+      <!-- Bouton pour soumettre et voir les résultats -->
+      <div class="submit-container">
+        <button type="submit" id="submit-btn">Voir mes résultats</button>
+      </div>
+    </form>
   </section>
 
-  <!-- Section 3 : Zone du questionnaire (navigation + questions) -->
-  <section id="question-section" class="container">
-    <div id="container">
-      <!-- Colonne de navigation (liste des questions) -->
-      <aside id="question-nav-container" class="collapsed">
-        <button id="toggle-nav">Voir toutes mes réponses ▶</button>
-        <ul id="question-nav"></ul>
-      </aside>
-
-      <!-- Zone principale : affichage de la question courante -->
-      <main id="main-content">
-        <div id="app"></div>
-      </main>
-    </div>
+  <!-- Section résultats (sera remplie dynamiquement par main.js) -->
+  <section id="results" class="container">
+    <!-- Contenu généré par JavaScript -->
   </section>
 
-  <!-- Section 4 : Zone de résultats (sera affichée à la fin par main.js) -->
-  <!-- (Ne pas la remplir ici : main.js la gén
+  <!-- Pied de page -->
+  <footer class="container">
+    <p class="tiny">
+      © 2025 — Adaptation libre pour usage non-commercial.  
+      La version française est basée sur : Ritvo R.A. et al. (2011).  
+      Ce test reste un outil de dépistage et ne remplace pas un diagnostic clinique.
+    </p>
+  </footer>
+</body>
+</html>
