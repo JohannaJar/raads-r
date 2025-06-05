@@ -1,13 +1,11 @@
 // main.js (version compatible GitHub Pages)
 // -------------------------------------------------
-// Charge et affiche le questionnaire RAADS-R (80 items)
-// avec cotation et page de résultats.
+// Charge et affiche le questionnaire RAADS-R (80 items).
 
-// Variables globales
-let dataGlobal; // contiendra { questions, normative, subscales }
+let dataGlobal;        // contiendra { questions, normative, subscales }
 const app = document.getElementById('app');
-let current = 0;        // index de la question en cours
-const answers = [];     // stocke les scores de chaque réponse
+let current = 0;       // index de la question en cours
+const answers = [];    // stocke les scores de chaque réponse
 
 // 1. Fonction d'initialisation : charger questions.json
 async function loadData() {
@@ -28,7 +26,7 @@ function renderQuestion() {
   app.innerHTML = ''; // on vide la zone
 
   const { questions, normative } = dataGlobal;
-  // Si on a épuisé toutes les questions, on affiche les résultats
+  // Si on a épuisé toutes les questions → afficher les résultats
   if (current >= questions.length) {
     showResults();
     return;
@@ -70,9 +68,9 @@ function selectAnswer(index) {
   const { normative } = dataGlobal;
   // Vérifier si cet item est "normatif" (notation inversée)
   const isNorm = normative.includes(current);
-  // Mapping des points selon type
-  //   - si symptomatique : réponses [0,1,2,3] → [3,2,1,0]
-  //   - si normatif      : [0,1,2,3] → [0,1,2,3]
+  // Mapping des points selon le type d’item
+  //   - Si symptomatique    : barème [3,2,1,0]
+  //   - Si normatif         : barème inversé [0,1,2,3]
   const scoreMap = isNorm ? [0, 1, 2, 3] : [3, 2, 1, 0];
   const pts = scoreMap[index];
   answers.push(pts);
@@ -118,10 +116,11 @@ function showResults() {
       <li><strong>Sensory-motor :</strong> ${totals['Sensory-motor']}</li>
     </ul>
     <h3>Score total : ${totals.total} / 240</h3>
-    <p>${totals.total >= 65 
-      ? '<span style="color:green;">≥ 65 → traits autistiques probables</span>' 
-      : '<span style="color:orange;">Score inférieur au seuil clinique (65)</span>'}
-    </p>
+    <p>${
+      totals.total >= 65 
+        ? '<span style="color:green;">≥ 65 → traits autistiques probables</span>' 
+        : '<span style="color:orange;">Score inférieur au seuil clinique (65)</span>'
+    }</p>
     <p class="note">Ce test est un outil de dépistage et ne remplace pas un diagnostic clinique.</p>
     <button id="restart" class="choice">Recommencer le test</button>
   `;
