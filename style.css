@@ -20,6 +20,12 @@ html, body {
   padding: 0 1rem;
 }
 
+.no-bullet {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 /* ─── En-tête ─── */
 
 header {
@@ -53,15 +59,8 @@ header .subtitle {
   margin-bottom: 1rem;
 }
 
-#about ul.no-bullet {
-  list-style: none;
-  padding: 0;
-  margin-left: 1rem;
-}
-
 #about ul.no-bullet li {
   margin-bottom: 0.6rem;
-  font-size: 1rem;
 }
 
 /* ─── Formulaire du questionnaire ─── */
@@ -72,7 +71,6 @@ header .subtitle {
   margin-bottom: 1rem;
 }
 
-/* Style des cartes de question */
 .question-card {
   background: #fff;
   border: 1px solid #d0d7de;
@@ -93,7 +91,6 @@ header .subtitle {
   font-size: 1rem;
 }
 
-/* Style des boutons radio + label */
 .choice-wrapper {
   display: flex;
   align-items: center;
@@ -101,7 +98,6 @@ header .subtitle {
 }
 
 .choice-wrapper input[type="radio"] {
-  /* masqué, on stylise le label à la place */
   opacity: 0;
   position: absolute;
   width: 0;
@@ -121,21 +117,14 @@ header .subtitle {
   user-select: none;
 }
 
-/* Au survol du label */
 .choice-wrapper label:hover {
   background: #dde9f5;
 }
 
-/* Quand l’input radio est coché, on stylise le label */
 .choice-wrapper input[type="radio"]:checked + label {
   background: #0066cc;
   color: #fff;
   border: 2px solid #004999;
-}
-
-/* Pour espacer légèrement chaque carte */
-.question-card:not(:last-child) {
-  margin-bottom: 1.2rem;
 }
 
 /* ─── Bouton de soumission ─── */
@@ -160,11 +149,7 @@ header .subtitle {
   background: #218838;
 }
 
-/* ─── Section résultats ─── */
-
-#results {
-  margin-top: 2rem;
-}
+/* ─── Section résultats (carte de base) ─── */
 
 #results .card {
   background: #fff;
@@ -172,6 +157,7 @@ header .subtitle {
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
 }
 
 #results h2 {
@@ -216,6 +202,113 @@ header .subtitle {
 
 #results button#restart:hover {
   background: #c82333;
+}
+
+/* ─── Styles pour “Que signifient mes scores ?” ─── */
+
+.results-interpretation {
+  margin-top: 2rem;
+}
+
+.results-interpretation h3 {
+  font-size: 1.4rem;
+  color: #003366;
+  margin-bottom: 0.8rem;
+}
+
+.interpretation-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.interpretation-table th,
+.interpretation-table td {
+  border: 1px solid #d0d7de;
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.interpretation-table th {
+  background: #e8f1fb;
+  color: #003366;
+}
+
+.interpretation-table tbody tr:nth-child(even) {
+  background: #f7f9fc;
+}
+
+.interpretation-table tbody tr:nth-child(odd) {
+  background: #fff;
+}
+
+.results-interpretation p,
+.results-interpretation .note {
+  font-size: 0.95rem;
+  color: #333;
+  margin-top: 0.8rem;
+}
+
+/* ─── Styles pour “Scores moyens RAADS-R” ─── */
+
+.results-comparison {
+  margin-top: 2.5rem;
+}
+
+.results-comparison h3 {
+  font-size: 1.4rem;
+  color: #003366;
+  margin-bottom: 0.8rem;
+}
+
+.results-comparison p,
+.results-comparison ul.no-bullet,
+.results-comparison .note {
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 0.8rem;
+}
+
+.results-comparison ul.no-bullet {
+  margin-left: 1rem;
+  padding: 0;
+}
+
+.results-comparison ul.no-bullet li {
+  margin-bottom: 0.4rem;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.comparison-table th,
+.comparison-table td {
+  border: 1px solid #d0d7de;
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.comparison-table th {
+  background: #e8f1fb;
+  color: #003366;
+}
+
+.comparison-table tbody tr:nth-child(even) {
+  background: #f7f9fc;
+}
+
+.comparison-table tbody tr:nth-child(odd) {
+  background: #fff;
+}
+
+.comparison-table td:first-child {
+  font-weight: 500;
+  color: #003366;
 }
 
 /* ─── Pied de page ─── */
