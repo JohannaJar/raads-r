@@ -1,241 +1,124 @@
-/* ─────────── Styles globaux ─────────── */
-
-* {
-  box-sizing: border-box;
+/* ───────────  Variables couleurs (facultatif) ─────────── */
+:root {
+  --blue-dark:   #003366;
+  --blue-main:   #0066cc;
+  --blue-light:  #e8f1fb;
+  --grey-border: #d0d7de;
+  --grey-bg:     #f5f7fa;
+  --green-main:  #28a745;
+  --green-dark:  #218838;
+  --red-main:    #dc3545;
+  --red-dark:    #c82333;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  background: #f5f7fa;
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  color: #333;
-  line-height: 1.5;
+/* ───────────  Base ─────────── */
+*{box-sizing:border-box;}
+html,body{
+  margin:0;
+  padding:0;
+  background:var(--grey-bg);
+  font-family:"Helvetica Neue",Arial,sans-serif;
+  color:#333;
+  line-height:1.5;
+}
+.container{width:90%;max-width:900px;margin:2rem auto;padding:0 1rem;}
+.no-bullet{list-style:none;margin:0;padding:0;}
+
+/* ───────────  En-tête ─────────── */
+header{background:var(--blue-main);color:#fff;text-align:center;padding:2rem 1rem;}
+header h1{margin:0;font-size:2.2rem;}
+header .subtitle{margin-top:.5rem;font-size:1.05rem;}
+
+/* ───────────  Sections texte ─────────── */
+#about h2,
+#quiz h2,
+.results-interpretation h3,
+.results-comparison h3,
+#answers-summary-container h3{
+  color:var(--blue-dark);
+}
+#about h2,#quiz h2{font-size:1.6rem;margin-bottom:1rem;}
+
+/* ───────────  Cartes de questions ─────────── */
+.question-card{
+  background:#fff;border:1px solid var(--grey-border);border-radius:8px;
+  padding:1.2rem 1rem;margin-bottom:1.5rem;
+  box-shadow:0 2px 4px rgba(0,0,0,.05);
+}
+.question-card h3{margin:0 0 .8rem 0;font-size:1.15rem;color:var(--blue-dark);}
+.question-card p{margin:0 0 1rem;font-size:1rem;}
+.choice-wrapper{display:flex;align-items:center;margin-bottom:.6rem;}
+.choice-wrapper input[type=radio]{position:absolute;opacity:0;width:0;height:0;}
+.choice-wrapper label{
+  background:#eef3f8;padding:.6rem .8rem;border-radius:6px;cursor:pointer;
+  font-size:1rem;color:var(--blue-dark);user-select:none;
+  transition:background .2s,border .2s;
+}
+.choice-wrapper label:hover{background:#dde9f5;}
+.choice-wrapper input[type=radio]:checked + label{
+  background:var(--blue-main);color:#fff;border:2px solid #004999;
 }
 
-.container {
-  width: 90%;
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+/* ───────────  Bouton soumission ─────────── */
+.submit-container{text-align:center;margin:2rem 0;}
+#submit-btn{
+  background:var(--green-main);color:#fff;border:none;border-radius:6px;
+  padding:.8rem 1.2rem;font-size:1.1rem;cursor:pointer;
+  transition:background .2s;
+}
+#submit-btn:hover{background:var(--green-dark);}
+
+/* ───────────  Carte résultats ─────────── */
+#results .card{
+  background:#fff;border:1px solid var(--grey-border);border-radius:8px;
+  padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 4px rgba(0,0,0,.05);
+}
+#results h2{margin-top:0;font-size:1.6rem;color:var(--blue-dark);}
+#results ul{margin:1rem 0;padding:0;list-style:none;}
+#results ul li{font-size:1rem;margin-bottom:.6rem;}
+#results h3{margin-top:1rem;font-size:1.3rem;}
+.note{font-size:.95rem;color:#555;margin-top:1rem;}
+#restart{
+  margin-top:1.2rem;background:var(--red-main);color:#fff;border:none;
+  border-radius:6px;padding:.7rem 1.2rem;font-size:1rem;cursor:pointer;
+  transition:background .2s;
+}
+#restart:hover{background:var(--red-dark);}
+
+/* ───────────  Résumé réponses ─────────── */
+#answers-summary-container{margin-top:2rem;}
+#answers-summary-container ol{padding-left:1.2rem;}
+#answers-summary-container li{margin-bottom:.5rem;font-size:.95rem;}
+
+/* ───────────  Bouton PDF ─────────── */
+.pdf-button-container{text-align:center;margin-top:2rem;}
+.pdf-btn{
+  background:var(--green-main);color:#fff;border:none;border-radius:6px;
+  padding:.8rem 1.2rem;font-size:1.1rem;cursor:pointer;transition:background .2s;
+}
+.pdf-btn:hover{background:var(--green-dark);}
+
+/* ───────────  Tableaux ─────────── */
+table{width:100%;border-collapse:collapse;}
+th,td{border:1px solid var(--grey-border);padding:.6rem .8rem;text-align:left;font-size:.95rem;}
+th{background:var(--blue-light);color:var(--blue-dark);}
+tbody tr:nth-child(even){background:#f7f9fc;}
+
+/* ───────────  Pied de page ─────────── */
+footer{text-align:center;margin-top:3rem;padding-bottom:2rem;font-size:.85rem;color:#777;}
+
+/* ───────────  Responsive ─────────── */
+@media (max-width:600px){
+  header h1{font-size:1.8rem;}
+  .question-card h3{font-size:1rem;}
+  .choice-wrapper label{font-size:.95rem;}
+  #submit-btn{width:100%;}
 }
 
-.no-bullet {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* ───────────  Impression ─────────── */
+@media print{
+  header,#about,#quiz,.submit-container,footer,.pdf-button-container{display:none !important;}
+  #results{margin:0;width:100%;padding:0;}
+  .card,.results-interpretation,.results-comparison,#answers-summary-container,table{page-break-inside:avoid;}
+  body{font-size:12pt;}
 }
-
-/* ─── En-tête ─── */
-
-header {
-  background: #0066cc;
-  color: #fff;
-  text-align: center;
-  padding: 2rem 1rem;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 2.2rem;
-  letter-spacing: 0.5px;
-}
-
-header .subtitle {
-  margin-top: 0.5rem;
-  font-size: 1.05rem;
-}
-
-/* ─── Section explicative ("À propos") ─── */
-
-#about h2 {
-  font-size: 1.6rem;
-  color: #0066cc;
-  margin-bottom: 1rem;
-}
-
-#about p {
-  font-size: 1rem;
-  margin-bottom: 1rem;
-}
-
-#about ul.no-bullet li {
-  margin-bottom: 0.6rem;
-}
-
-/* ─── Formulaire du questionnaire ─── */
-
-#quiz h2 {
-  font-size: 1.6rem;
-  color: #0066cc;
-  margin-bottom: 1rem;
-}
-
-.question-card {
-  background: #fff;
-  border: 1px solid #d0d7de;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  padding: 1.2rem 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.question-card h3 {
-  margin: 0 0 0.8rem 0;
-  font-size: 1.15rem;
-  color: #003366;
-}
-
-.question-card p {
-  margin: 0 0 1rem 0;
-  font-size: 1rem;
-}
-
-.choice-wrapper {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.6rem;
-}
-
-.choice-wrapper input[type="radio"] {
-  opacity: 0;
-  position: absolute;
-  width: 0;
-  height: 0;
-}
-
-.choice-wrapper label {
-  display: inline-block;
-  background: #eef3f8;
-  padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  color: #003366;
-  transition: background 0.2s ease, border 0.2s ease;
-  border: 2px solid transparent;
-  user-select: none;
-}
-
-.choice-wrapper label:hover {
-  background: #dde9f5;
-}
-
-.choice-wrapper input[type="radio"]:checked + label {
-  background: #0066cc;
-  color: #fff;
-  border: 2px solid #004999;
-}
-
-/* ─── Bouton de soumission ─── */
-
-.submit-container {
-  text-align: center;
-  margin: 2rem 0;
-}
-
-#submit-btn {
-  background: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 0.8rem 1.2rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-#submit-btn:hover {
-  background: #218838;
-}
-
-/* ─── Section Résultats : cartes et conteneurs ─── */
-
-#results .card {
-  background: #fff;
-  border: 1px solid #d0d7de;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  margin-bottom: 1.5rem;
-}
-
-#results h2 {
-  margin-top: 0;
-  font-size: 1.6rem;
-  color: #003366;
-}
-
-#results ul {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0;
-}
-
-#results ul li {
-  font-size: 1rem;
-  margin-bottom: 0.6rem;
-}
-
-#results h3 {
-  margin-top: 1rem;
-  font-size: 1.3rem;
-}
-
-#results p.note {
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  color: #555;
-}
-
-#results button#restart {
-  margin-top: 1.2rem;
-  background: #dc3545;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 0.7rem 1.2rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-#results button#restart:hover {
-  background: #c82333;
-}
-
-/* ─── Conteneur résumé des réponses ─── */
-
-#answers-summary-container {
-  margin-top: 2rem;
-}
-
-#answers-summary-container h3 {
-  font-size: 1.4rem;
-  color: #003366;
-  margin-bottom: 0.8rem;
-}
-
-#answers-summary-container ol {
-  padding-left: 1.2rem;
-}
-
-#answers-summary-container li {
-  margin-bottom: 0.5rem;
-  font-size: 0.95rem;
-}
-
-/* ─── Bouton “Télécharger en PDF” ─── */
-
-.pdf-button-container {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.pdf-btn {
-  background: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 0.8rem 1.2rem;
-  font-size: 1.1rem;
