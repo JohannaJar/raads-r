@@ -337,3 +337,31 @@ footer {
     width: 100%;
   }
 }
+/* ─── Règles spécifiques pour l’impression (PDF) ─── */
+@media print {
+  /* Masquer tout ce qui n’est pas la section #results (exemple) */
+  header, 
+  #about, 
+  #quiz, 
+  #submit-btn, 
+  .submit-container, 
+  footer {
+    display: none !important;
+  }
+
+  /* Faire en sorte que #results occupe toute la page */
+  #results {
+    margin: 0;
+    width: 100%;
+  }
+
+  /* Améliorer lisibilité des tableaux à l’impression */
+  table {
+    page-break-inside: avoid;
+  }
+  
+  /* Optionnel : s’assurer que la page ne coupe pas une carte  */
+  .card {
+    page-break-inside: avoid;
+  }
+}
