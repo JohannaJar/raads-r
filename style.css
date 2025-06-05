@@ -149,7 +149,7 @@ header .subtitle {
   background: #218838;
 }
 
-/* ─── Section résultats (carte de base) ─── */
+/* ─── Section Résultats : cartes et conteneurs ─── */
 
 #results .card {
   background: #fff;
@@ -204,197 +204,38 @@ header .subtitle {
   background: #c82333;
 }
 
-/* ─── Styles pour “Que signifient mes scores ?” ─── */
+/* ─── Conteneur résumé des réponses ─── */
 
-.results-interpretation {
+#answers-summary-container {
   margin-top: 2rem;
 }
 
-.results-interpretation h3 {
+#answers-summary-container h3 {
   font-size: 1.4rem;
   color: #003366;
   margin-bottom: 0.8rem;
 }
 
-.interpretation-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
+#answers-summary-container ol {
+  padding-left: 1.2rem;
 }
 
-.interpretation-table th,
-.interpretation-table td {
-  border: 1px solid #d0d7de;
-  padding: 0.6rem 0.8rem;
-  text-align: left;
+#answers-summary-container li {
+  margin-bottom: 0.5rem;
   font-size: 0.95rem;
 }
 
-.interpretation-table th {
-  background: #e8f1fb;
-  color: #003366;
-}
+/* ─── Bouton “Télécharger en PDF” ─── */
 
-.interpretation-table tbody tr:nth-child(even) {
-  background: #f7f9fc;
-}
-
-.interpretation-table tbody tr:nth-child(odd) {
-  background: #fff;
-}
-
-.results-interpretation p,
-.results-interpretation .note {
-  font-size: 0.95rem;
-  color: #333;
-  margin-top: 0.8rem;
-}
-
-/* ─── Styles pour “Scores moyens RAADS-R” ─── */
-
-.results-comparison {
-  margin-top: 2.5rem;
-}
-
-.results-comparison h3 {
-  font-size: 1.4rem;
-  color: #003366;
-  margin-bottom: 0.8rem;
-}
-
-.results-comparison p,
-.results-comparison ul.no-bullet,
-.results-comparison .note {
-  font-size: 0.95rem;
-  color: #333;
-  margin-bottom: 0.8rem;
-}
-
-.results-comparison ul.no-bullet {
-  margin-left: 1rem;
-  padding: 0;
-}
-
-.results-comparison ul.no-bullet li {
-  margin-bottom: 0.4rem;
-}
-
-.comparison-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-}
-
-.comparison-table th,
-.comparison-table td {
-  border: 1px solid #d0d7de;
-  padding: 0.6rem 0.8rem;
-  text-align: left;
-  font-size: 0.95rem;
-}
-
-.comparison-table th {
-  background: #e8f1fb;
-  color: #003366;
-}
-
-.comparison-table tbody tr:nth-child(even) {
-  background: #f7f9fc;
-}
-
-.comparison-table tbody tr:nth-child(odd) {
-  background: #fff;
-}
-
-.comparison-table td:first-child {
-  font-weight: 500;
-  color: #003366;
-}
-
-/* ─── Pied de page ─── */
-
-footer {
-  margin-top: 3rem;
-  text-align: center;
-  padding-bottom: 2rem;
-  font-size: 0.85rem;
-  color: #777;
-}
-
-/* ─── Responsive (petits écrans) ─── */
-
-@media (max-width: 600px) {
-  header h1 {
-    font-size: 1.8rem;
-  }
-  .question-card h3 {
-    font-size: 1rem;
-  }
-  .choice-wrapper label {
-    font-size: 0.95rem;
-  }
-  #submit-btn {
-    width: 100%;
-  }
-}
-/* ─── Styles pour le bouton PDF ─── */
 .pdf-button-container {
   text-align: center;
   margin-top: 2rem;
 }
 
 .pdf-btn {
-  background: #28a745;       /* même vert que “Voir mes résultats” */
+  background: #28a745;
   color: #fff;
   border: none;
   border-radius: 6px;
   padding: 0.8rem 1.2rem;
   font-size: 1.1rem;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.pdf-btn:hover {
-  background: #218838;       /* un vert un peu plus foncé au survol */
-}
-/* ─── Règles d’impression (PDF) ─── */
-@media print {
-  /* 1. Masquer tout ce qui n’est PAS #results (on veut uniquement la partie résultats + résumés) */
-  header,
-  #about,
-  #quiz,
-  #submit-btn,
-  .submit-container,
-  footer {
-    display: none !important;
-  }
-
-  /* 2. Réorganiser #results pour qu’il occupe toute la largeur */
-  #results {
-    margin: 0;
-    width: 100%;
-    padding: 0;
-  }
-
-  /* 3. Affiner l’aspect imprimé des cartes et tableaux */
-  .card, .results-interpretation, .results-comparison, #answers-summary-container {
-    background: #fff;
-    box-shadow: none;
-    page-break-inside: avoid;
-  }
-
-  table {
-    page-break-inside: avoid;
-  }
-
-  /* 4. Optionnel : masquer le bouton “Télécharger mes résultats en PDF” à l’impression */
-  .pdf-button-container {
-    display: none !important;
-  }
-
-  /* 5. Ajuster la taille de police si besoin pour l’impression */
-  body {
-    font-size: 12pt;
-  }
-}
-
