@@ -29,10 +29,28 @@ html, body {
   margin: 2rem auto;
   padding: 0 1rem;
 }
+/* Masque les puces d’une liste vide, si jamais vous la gardez (optionnel) */
 .no-bullet {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+/* Centrer la liste utile sous le sous-titre */
+.centered-list {
+  list-style: disc;      /* Affiche des puces classiques */
+  padding-left: 0;       /* Supprime le retrait par défaut */
+  margin: 0 auto;        /* Centre horizontalement */
+  width: fit-content;    /* Ajuste la largeur au contenu */
+}
+.centered-list li {
+  display: block;        /* Chaque élément sur sa ligne, centré par la largeur parent */
+  text-align: center;
+  margin: 0.2rem 0;      /* Espace vertical entre les puces */
+  font-size: 0.95rem;
+  color: #fff;           /* Texte en blanc pour contraster sur fond bleu */
+}
+
 }
 
 /* ─── En-tête ─── */
