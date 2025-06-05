@@ -1,232 +1,180 @@
-// main.js (ajout d'un bouton "Afficher mes résultats")
-// ---------------------------------------------------
+// main.js – Affichage séquentiel de toutes les questions + calcul des résultats
 
-// Variables globales
-let dataGlobal;                // contiendra { questions, normative, subscales }
-const app = document.getElementById('app');
-const navList = document.getElementById('question-nav');
-const toggleNavBtn = document.getElementById('toggle-nav');
-let current = 0;               // index de la question en cours (0 à 79)
-const answers = new Array(80).fill(null); // conserve la réponse ou null
-
-// 1. Chargement du JSON au démarrage
-async function loadData() {
+// 1. Chargement du fichier questions.json dès que le DOM est prêt
+document.addEventListener('DOMContentLoaded', async () => {
   try {
     const response = await fetch('questions.json');
-    if (!response.ok) {
-      throw new Error(`Erreur HTTP ${response.status}`);
-    }
-    dataGlobal = await response.json();
-    initNav();         // créer les 80 boutons Q1…Q80
-    renderQuestion();  // afficher la première question
+    if (!response.ok) throw new Error(`Erreur HTTP ${response.status}`);
+    const data = await response.json();
+    initializeQuiz(data);
   } catch (err) {
-    if (app) {
-      app.innerHTML = `<p class="note">Impossible de charger les questions : ${err.message}</p>`;
+    document.getElementById('questions-container').innerHTML = `
+      <p class="note" style="color: red;">
+        Impossible de charger les questions : ${err.message}
+      </p>
+    `;
+  }
+});
+
+// 2. Fonction d’initialisation du quiz
+function initializeQuiz(data) {
+  const { questions, normative, subscales } = data;
+  const container = document.getElementById('questions-container');
+
+  // Pour chaque question, on crée une carte (div.question-card)
+  questions.forEach((text, idx) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+
+    // Titre “Question n / 80”
+    const title = document.createElement('h3');
+    title.textContent = `Question ${idx + 1} / ${questions.length}`;
+    card.appendChild(title);
+
+    // Texte de l’affirmation
+    const para = document.createElement('p');
+    para.textContent = text;
+    card.appendChild(para);
+
+    // Les 4 choix (“radio buttons”)
+    const optionsTexte = [
+      'Vrai maintenant et avant 16 ans',
+      'Vrai seulement maintenant',
+      'Vrai seulement avant 16 ans',
+      'Jamais vrai'
+    ];
+
+    optionsTexte.forEach((labelText, choiceIdx) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'choice-wrapper';
+
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = `question-${idx}`;
+      radio.id = `q${idx}-c${choiceIdx}`;
+      // On ne met pas encore de value, on stocke choiceIdx via "data-"
+      radio.dataset.qidx = idx;
+      radio.dataset.cidx = choiceIdx;
+
+      const label = document.createElement('label');
+      label.htmlFor = `q${idx}-c${choiceIdx}`;
+      label.textContent = labelText;
+
+      wrapper.appendChild(radio);
+      wrapper.appendChild(label);
+      card.appendChild(wrapper);
+    });
+
+    container.appendChild(card);
+  });
+
+  // On ajoute l’événement au formulaire pour le submit
+  document.getElementById('raadsr-form').addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    calculateResults(questions, normative, subscales);
+  });
+}
+
+// 3. Fonction de calcul des résultats quand on soumet le formulaire
+function calculateResults(questions, normative, subscales) {
+  const answers = new Array(questions.length).fill(null);
+
+  // Parcourir chaque question et récupérer le bouton radio coché
+  for (let i = 0; i < questions.length; i++) {
+    const selected = document.querySelector(`input[name="question-${i}"]:checked`);
+    if (selected) {
+      const choiceIdx = parseInt(selected.dataset.cidx, 10);
+      const isNorm = normative.includes(i);
+      // Mapping des points selon normatif ou symptomatique
+      const score = isNorm
+        ? [0, 1, 2, 3][choiceIdx]
+        : [3, 2, 1, 0][choiceIdx];
+      answers[i] = score;
     } else {
-      console.error("Le <div id='app'> est introuvable. Vérifiez index.html.");
+      // Si une question n'est pas cochée, on arrête et on signale l'erreur
+      alert(`⚠️ Veuillez répondre à la question ${i + 1} avant de soumettre.`);
+      return;
     }
   }
-}
 
-// 2. Création dynamique de la colonne de navigation
-function initNav() {
-  const { questions } = dataGlobal;
-  navList.innerHTML = ''; // vider la liste si elle existait
-
-  questions.forEach((_, idx) => {
-    const li = document.createElement('li');
-    const btn = document.createElement('button');
-    btn.textContent = `Q${idx + 1}`;
-    btn.id = `nav-btn-${idx}`;
-    btn.classList.add('unanswered'); // couleur rouge par défaut
-    btn.onclick = () => {
-      current = idx;
-      renderQuestion();
-    };
-    li.appendChild(btn);
-    navList.appendChild(li);
-  });
-
-  // Bouton pour déplier/replier la colonne
-  toggleNavBtn.onclick = () => {
-    const navContainer = document.getElementById('question-nav-container');
-    navContainer.classList.toggle('collapsed');
-    const visible = !navContainer.classList.contains('collapsed');
-    toggleNavBtn.textContent = visible
-      ? 'Masquer mes réponses ◀'
-      : 'Voir toutes mes réponses ▶';
-  };
-}
-
-// 3. Afficher la question “current”
-function renderQuestion() {
-  app.innerHTML = ''; // on vide la zone de contenu
-
-  const { questions, normative } = dataGlobal;
-  updateNavClasses(); // met à jour les classes CSS dans la colonne
-
-  // Si on a dépassé la dernière question, on affiche directement les résultats
-  if (current >= questions.length) {
-    showResults();
-    return;
-  }
-
-  // Création de la carte (DIV) pour la question courante
-  const qDiv = document.createElement('div');
-  qDiv.className = 'card';
-
-  qDiv.innerHTML = `
-    <h2>Question ${current + 1} / ${questions.length}</h2>
-    <p>${questions[current]}</p>
-  `;
-
-  // Les quatre boutons de réponse
-  const choices = [
-    'Vrai maintenant et avant 16 ans',
-    'Vrai seulement maintenant',
-    'Vrai seulement avant 16 ans',
-    'Jamais vrai'
-  ];
-
-  choices.forEach((label, i) => {
-    const btn = document.createElement('button');
-    btn.textContent = label;
-    btn.className = 'choice';
-
-    // Si l’utilisateur a déjà répondu à cette question, on entoure son choix
-    const prev = answers[current];
-    const isNorm = normative.includes(current);
-    const mapped = isNorm ? [0, 1, 2, 3][i] : [3, 2, 1, 0][i];
-    if (prev !== null && prev === mapped) {
-      btn.classList.add('selected');
-    }
-
-    btn.onclick = () => selectAnswer(i);
-    qDiv.appendChild(btn);
-  });
-
-  // On ajoute, sous les 4 boutons, le bouton “Afficher mes résultats” 
-  // qui s’affiche uniquement si toutes les réponses sont remplies (aucun null).
-  if (answers.every(ans => ans !== null)) {
-    const showBtn = document.createElement('button');
-    showBtn.textContent = 'Afficher mes résultats';
-    showBtn.id = 'show-results-btn';
-    showBtn.style.marginTop = '1.2rem';
-    showBtn.style.padding = '0.6rem 1rem';
-    showBtn.style.fontSize = '1rem';
-    showBtn.style.border = 'none';
-    showBtn.style.borderRadius = '6px';
-    showBtn.style.background = '#4285f4';
-    showBtn.style.color = '#fff';
-    showBtn.style.cursor = 'pointer';
-    showBtn.onclick = () => {
-      current = questions.length; // forcer “au‐delà” pour déclencher showResults()
-      showResults();
-    };
-    qDiv.appendChild(showBtn);
-  }
-
-  app.appendChild(qDiv);
-}
-
-// 4. Mapper l’index de bouton à un score (0–3)
-function mapAnswerToScore(buttonIdx, isNormatif) {
-  return isNormatif
-    ? [0, 1, 2, 3][buttonIdx]
-    : [3, 2, 1, 0][buttonIdx];
-}
-
-// 5. Quand l’utilisateur clique sur un choix
-function selectAnswer(buttonIdx) {
-  const isNorm = dataGlobal.normative.includes(current);
-  const score = mapAnswerToScore(buttonIdx, isNorm);
-  answers[current] = score;
-
-  // Mettre à jour le bouton Qn dans la nav
-  const navBtn = document.getElementById(`nav-btn-${current}`);
-  navBtn.classList.remove('unanswered');
-  navBtn.classList.add('answered');
-
-  // Avancer à la question suivante si elle existe
-  if (current < dataGlobal.questions.length - 1) {
-    current++;
-    renderQuestion();
-  } else {
-    // Si c'était la question 80, on reste sur la carte Q80 mais on affiche le bouton “Afficher mes résultats”
-    renderQuestion();
-  }
-}
-
-// 6. Mettre à jour les classes sur les boutons Qn pour "current"
-function updateNavClasses() {
-  dataGlobal.questions.forEach((_, idx) => {
-    const navBtn = document.getElementById(`nav-btn-${idx}`);
-    navBtn.classList.remove('current');
-    if (answers[idx] !== null) {
-      navBtn.classList.remove('unanswered');
-      navBtn.classList.add('answered');
-    }
-    if (idx === current) {
-      navBtn.classList.add('current');
-    }
-  });
-}
-
-// 7. Calculer et afficher les résultats finaux
-function showResults() {
-  const { subscales } = dataGlobal;
-
-  // Calcul des sous-scores + total
+  // À ce stade, on a un tableau "answers" complet (80 scores 0–3)
+  // On calcule maintenant le score total et par sous-échelle
   const totals = {
-    total: answers.reduce((sum, v) => sum + (v !== null ? v : 0), 0),
+    total: answers.reduce((sum, v) => sum + v, 0),
     'Social relatedness': 0,
     'Circumscribed interests': 0,
     'Language': 0,
     'Sensory-motor': 0
   };
+
   answers.forEach((score, idx) => {
-    if (score !== null) {
-      Object.entries(subscales).forEach(([name, indices]) => {
-        if (indices.includes(idx)) {
-          totals[name] += score;
-        }
-      });
-    }
+    Object.entries(subscales).forEach(([name, indices]) => {
+      if (indices.includes(idx)) {
+        totals[name] += score;
+      }
+    });
   });
 
-  // Création de la carte "résultats"
-  const resDiv = document.createElement('div');
-  resDiv.className = 'card';
-  resDiv.innerHTML = `
-    <h2>Résultats</h2>
-    <ul>
-      <li><strong>Social relatedness :</strong> ${totals['Social relatedness']}</li>
-      <li><strong>Circumscribed interests :</strong> ${totals['Circumscribed interests']}</li>
-      <li><strong>Language :</strong> ${totals['Language']}</li>
-      <li><strong>Sensory-motor :</strong> ${totals['Sensory-motor']}</li>
-    </ul>
-    <h3>Score total : ${totals.total} / 240</h3>
-    <p>${
-      totals.total >= 65
-        ? '<span style="color:green;">≥ 65 → traits autistiques probables</span>'
-        : '<span style="color:orange;">Score inférieur au seuil clinique (65)</span>'
-    }</p>
-    <p class="note">Ce test est un outil de dépistage et ne remplace pas un diagnostic clinique.</p>
-    <button id="restart" class="choice">Recommencer le test</button>
-  `;
-
-  // On remplace complètement la zone <div id="app"> par la carte des résultats
-  app.innerHTML = '';
-  document.getElementById('main-content').appendChild(resDiv);
-
-  // Cacher la navigation pour laisser place aux résultats
-  document.getElementById('question-nav-container').classList.add('collapsed');
-  toggleNavBtn.textContent = 'Voir toutes mes réponses ▶';
-
-  document.getElementById('restart').onclick = () => {
-    location.reload();
-  };
+  // On appelle showResults pour afficher la carte de résultats
+  showResults(totals);
 }
 
-// 8. On démarre tout en appelant la première fois loadData()
-loadData();
+// 4. Fonction d’affichage des résultats
+function showResults(totals) {
+  const resultsSection = document.getElementById('results');
+  resultsSection.innerHTML = ''; // vider le contenu existant
+
+  const card = document.createElement('div');
+  card.className = 'card';
+
+  // Titre
+  const heading = document.createElement('h2');
+  heading.textContent = 'Vos résultats';
+  card.appendChild(heading);
+
+  // Liste des sous-scores
+  const ul = document.createElement('ul');
+  Object.entries(totals).forEach(([name, score]) => {
+    if (name !== 'total') {
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>${name} :</strong> ${score}`;
+      ul.appendChild(li);
+    }
+  });
+  card.appendChild(ul);
+
+  // Score total + interprétation
+  const h3 = document.createElement('h3');
+  h3.innerHTML = `Score total : ${totals.total} / 240`;
+  card.appendChild(h3);
+
+  const interpretation = document.createElement('p');
+  interpretation.innerHTML = totals.total >= 65
+    ? `<span style="color: #007bff; font-weight: bold;">
+         ≥ 65 → traits autistiques probables
+       </span>`
+    : `<span style="color: #ff8800; font-weight: bold;">
+         Score inférieur au seuil clinique (65)
+       </span>`;
+  card.appendChild(interpretation);
+
+  // Note de mise en garde
+  const note = document.createElement('p');
+  note.className = 'note';
+  note.textContent = 'Ce test est un outil de dépistage et ne remplace pas un diagnostic clinique.';
+  card.appendChild(note);
+
+  // Bouton "Recommencer le test"
+  const btn = document.createElement('button');
+  btn.id = 'restart';
+  btn.textContent = 'Recommencer le test';
+  btn.onclick = () => {
+    location.reload();
+  };
+  card.appendChild(btn);
+
+  resultsSection.appendChild(card);
+
+  // Scroll vers les résultats
+  card.scrollIntoView({ behavior: 'smooth' });
+}
