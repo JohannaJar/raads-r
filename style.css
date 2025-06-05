@@ -29,44 +29,40 @@ html, body {
   margin: 2rem auto;
   padding: 0 1rem;
 }
-/* Masque les puces d’une liste vide, si jamais vous la gardez (optionnel) */
 .no-bullet {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-/* Centrer la liste utile sous le sous-titre */
-.centered-list {
-  list-style: disc;      /* Affiche des puces classiques */
-  padding-left: 0;       /* Supprime le retrait par défaut */
-  margin: 0 auto;        /* Centre horizontalement */
-  width: fit-content;    /* Ajuste la largeur au contenu */
-}
-.centered-list li {
-  display: block;        /* Chaque élément sur sa ligne, centré par la largeur parent */
-  text-align: center;
-  margin: 0.2rem 0;      /* Espace vertical entre les puces */
-  font-size: 0.95rem;
-  color: #fff;           /* Texte en blanc pour contraster sur fond bleu */
-}
-
-}
-
 /* ─── En-tête ─── */
-header {
-  background: var(--blue-main);
-  color: #fff;
+.site-header {
+  background-color: #2368b5;  /* bleu foncé */
+  color: #ffffff;             /* texte blanc */
   text-align: center;
   padding: 2rem 1rem;
-}
-header h1 {
   margin: 0;
-  font-size: 2.2rem;
 }
-header .subtitle {
+.site-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.2;
+}
+.site-header .subtitle {
   margin-top: 0.5rem;
-  font-size: 1.05rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+.centered-list {
+  list-style-type: disc;      /* puces rondes */
+  padding-left: 0;            /* supprime le retrait par défaut */
+  margin: 1rem auto 0 auto;   /* centre horizontalement et espace au-dessus */
+  display: inline-block;      /* fait que <ul> prend juste la largeur nécessaire */
+}
+.centered-list li {
+  margin: 0.4rem 0;           /* espace entre chaque puce (vertical) */
+  font-size: 0.95rem;
+  color: #ffffff;             /* texte des puces en blanc */
 }
 
 /* ─── Section “À propos” ─── */
