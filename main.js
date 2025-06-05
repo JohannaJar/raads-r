@@ -118,17 +118,16 @@ function calculateResults(questions, normative, subscales) {
   // On appelle showResults pour afficher la carte de résultats
   showResults(totals);
 }
-
 /**
- * showResults : injecte la carte de résultats dans #results-card-container
- * et configure le bouton “Télécharger mes résultats en PDF”.
+ * showResults : injecte la carte de résultats, la liste des réponses,
+ *              et met en place le bouton “Télécharger en PDF”.
  */
 function showResults(totals) {
-  // 1. Sélectionner le seul conteneur qu'on vide/réécrit
+  // 1. Vider le conteneur de la carte de résultats
   const cardContainer = document.getElementById('results-card-container');
-  cardContainer.innerHTML = ''; // on ne touche pas aux sections statiques en dessous
+  cardContainer.innerHTML = '';
 
-  // 2. Créer la carte (div.card) pour afficher les résultats
+  // 2. Créer la carte (div.card) pour afficher les scores
   const card = document.createElement('div');
   card.className = 'card';
 
@@ -137,7 +136,7 @@ function showResults(totals) {
   heading.textContent = 'Vos résultats';
   card.appendChild(heading);
 
-  // 2.b. Table de correspondance anglais → français
+  // 2.b. Mapping anglais → français pour les sous-catégories
   const labelsFr = {
     "Social relatedness": "Relations sociales",
     "Circumscribed interests": "Intérêts circonscrits",
@@ -145,10 +144,10 @@ function showResults(totals) {
     "Sensory-motor": "Sensoriel-moteur"
   };
 
-  // 2.c. Liste des sous-scores (en français)
+  // 2.c. Liste des sous-scores (liens vers labelsFr)
   const ul = document.createElement('ul');
   Object.entries(totals).forEach(([keyEn, score]) => {
-    if (keyEn === 'total') return; // on gère "total" plus bas
+    if (keyEn === 'total') return;
     const labelFr = labelsFr[keyEn] || keyEn;
     const li = document.createElement('li');
     li.innerHTML = `<strong>${labelFr} :</strong> ${score}`;
@@ -186,18 +185,59 @@ function showResults(totals) {
   };
   card.appendChild(btnRestart);
 
-  // 3. On insère la carte dans son conteneur dédié
+  // 3. Injecter la carte de résultats dans son conteneur dédié
   cardContainer.appendChild(card);
 
-  // 4. Faire défiler (smooth) vers la carte de résultats si la page est longue
+  // 4. Faire défiler doucement jusqu’à la carte
   card.scrollIntoView({ behavior: 'smooth' });
 
-  // 5. Configurer le bouton “Télécharger mes résultats en PDF”
+  // === 5. Construire le résumé des réponses : “Question n : texte → réponse” ===
+  //    On suppose que "questions" et "answers" sont des variables globales
+  //    créées par votre code d’initialisation (initializeQuiz) :
+  //
+  //    - questions : tableau de 80 chaînes de caractères (le texte de chaque question)
+  //    - answers   : tableau de 80 valeurs { 0,1,2,3 } correspondant à l’index choisi
+  //
+  //    On doit également savoir quelle étiquette (texte) correspond à chaque index {0,1,2,3}.
+  //
+  const summaryContainer = document.getElementById('answers-summary-container');
+  summaryContainer.innerHTML = ''; // on vide l’ancien résumé (s’il existe)
+
+  const titleSummary = document.createElement('h3');
+  titleSummary.textContent = 'Vos réponses';
+  summaryContainer.appendChild(titleSummary);
+
+  const listSummary = document.createElement('ol');
+  listSummary.style.margin = '1rem 0';
+  // Tableau des labels exacts dans l’ordre des boutons
+  const optionLabels = [
+    'Vrai maintenant et avant 16 ans',
+    'Vrai seulement maintenant',
+    'Vrai seulement avant 16 ans',
+    'Jamais vrai'
+  ];
+
+  // On parcourt toutes les questions
+  questions.forEach((questionText, idx) => {
+    // answers[idx] vaut 0,1,2 ou 3 (puisque l’utilisateur a répondu à toutes)
+    const chosenIndex = answers[idx];
+    const chosenLabel = optionLabels[chosenIndex];
+
+    const li = document.createElement('li');
+    li.style.marginBottom = '0.5rem';
+    li.innerHTML = `<strong>Q${idx + 1} :</strong> ${questionText}  
+                    <br><em>Réponse :</em> ${chosenLabel}`;
+    listSummary.appendChild(li);
+  });
+
+  summaryContainer.appendChild(listSummary);
+
+  // === 6. Configurer le bouton “Télécharger en PDF” ===
   const pdfBtn = document.getElementById('download-pdf-btn');
   if (pdfBtn) {
     pdfBtn.onclick = () => {
-      // Juste ouvrir la boîte d’impression : l’utilisateur choisira “Imprimer en PDF”
-      window.print();
+      window.print(); // ouvre la boîte d’impression
     };
   }
 }
+
