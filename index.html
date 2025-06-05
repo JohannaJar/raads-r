@@ -32,8 +32,8 @@
     </ul>
     <p>
       Un score total ≥ 65/240 est associé à une probabilité élevée de TSA, mais seul un professionnel
-      peut poser le diagnostic officiel. Ce test sert de dépistage, **il n’a pas vocation à remplacer
-      une évaluation clinique**.
+      peut poser le diagnostic officiel. Ce test sert de dépistage, <strong>il n’a pas vocation à remplacer
+      une évaluation clinique</strong>.
     </p>
   </section>
 
@@ -53,7 +53,154 @@
 
   <!-- Section résultats (sera remplie dynamiquement par main.js) -->
   <section id="results" class="container">
-    <!-- Contenu généré par JavaScript -->
+    <!-- 1. Carte de résultats (injectée par showResults()) -->
+    <!-- 2. Section “Que signifient mes scores ?” -->
+    <div class="results-interpretation">
+      <h3>Que signifient mes scores ?</h3>
+      <p>
+        Tout score <strong>égal ou supérieur à 65</strong> est compatible avec des traits autistiques.  
+        Plus votre score augmente, plus il y a d’indices de traits autistiques.  
+        Le tableau ci-dessous présente des repères généraux pour interpréter votre score total au RAADS-R :
+      </p>
+      <table class="interpretation-table">
+        <thead>
+          <tr>
+            <th>Score total</th>
+            <th>Interprétation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>25</td>
+            <td>Probablement non autistique.</td>
+          </tr>
+          <tr>
+            <td>50</td>
+            <td>Quelques traits autistiques, mais probablement non autistique (certains autistiques peuvent obtenir jusqu’à 44).</td>
+          </tr>
+          <tr>
+            <td>65</td>
+            <td>Seuil minimal à partir duquel l’autisme est envisagé.</td>
+          </tr>
+          <tr>
+            <td>90</td>
+            <td>Indications plus marquées d’autisme, bien que certaines personnes non autistiques puissent atteindre ce score.</td>
+          </tr>
+          <tr>
+            <td>130</td>
+            <td>Score moyen des personnes autistes ; preuve forte en faveur d’un TSA.</td>
+          </tr>
+          <tr>
+            <td>160</td>
+            <td>Très forte probabilité de traits autistiques.</td>
+          </tr>
+          <tr>
+            <td>227</td>
+            <td>Score maximal observé chez les autistiques dans l’étude de Ritvo et al. (2011).</td>
+          </tr>
+          <tr>
+            <td>240</td>
+            <td>Score maximal possible au RAADS-R.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note">
+        Aucun test seul n’est définitif : si vous obtenez un score faible mais pensez être autistique, 
+        n’hésitez pas à passer d’autres questionnaires ou à consulter un professionnel spécialisé.
+      </p>
+    </div>
+
+    <!-- 3. Section “Scores moyens RAADS-R” -->
+    <div class="results-comparison">
+      <h3>Scores moyens RAADS-R</h3>
+      <p>
+        Le tableau ci-dessous présente les scores moyens totaux et sous-scores pour différentes populations, 
+        tels que rapportés par Embrace Autism dans leur étude en ligne.  
+        Vous pouvez ainsi comparer vos résultats à ceux observés chez :
+      </p>
+      <ul class="no-bullet">
+        <li>• Personnes autistes diagnostiquées (hommes, femmes)</li>
+        <li>• Personnes suspectées d’être autistes</li>
+        <li>• Personnes neurotypiques (non autistes)</li>
+      </ul>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Groupe</th>
+            <th>Score total</th>
+            <th>Langage</th>
+            <th>Relations sociales</th>
+            <th>Sensoriel/moteur</th>
+            <th>Intérêts circonscrits</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Valeurs seuils de l’autisme</td>
+            <td>65,0</td>
+            <td>4,0</td>
+            <td>31,0</td>
+            <td>16,0</td>
+            <td>15,0</td>
+          </tr>
+          <tr>
+            <td>Hommes autistes</td>
+            <td>148,6</td>
+            <td>11,9</td>
+            <td>71,3</td>
+            <td>36,7</td>
+            <td>28,7</td>
+          </tr>
+          <tr>
+            <td>Femmes autistes</td>
+            <td>160,4</td>
+            <td>12,8</td>
+            <td>73,5</td>
+            <td>43,1</td>
+            <td>31,0</td>
+          </tr>
+          <tr>
+            <td>Hommes suspectés d’être autistes</td>
+            <td>141,6</td>
+            <td>11,2</td>
+            <td>70,0</td>
+            <td>33,3</td>
+            <td>27,2</td>
+          </tr>
+          <tr>
+            <td>Femmes suspectées d’être autistes</td>
+            <td>145,2</td>
+            <td>11,3</td>
+            <td>67,2</td>
+            <td>38,7</td>
+            <td>28,0</td>
+          </tr>
+          <tr>
+            <td>Hommes neurotypiques</td>
+            <td>84,2</td>
+            <td>6,6</td>
+            <td>43,0</td>
+            <td>19,0</td>
+            <td>15,7</td>
+          </tr>
+          <tr>
+            <td>Femmes neurotypiques</td>
+            <td>91,6</td>
+            <td>6,8</td>
+            <td>42,8</td>
+            <td>24,8</td>
+            <td>17,2</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="note">
+        Remarque : dans l’étude en ligne, les scores « neurotypiques » peuvent paraître élevés
+        car certaines personnes non diagnostiquées se découvrent ensuite des traits autistiques.  
+        Les valeurs issues de la recherche clinique (Ritvo et al., 2011) restent les plus fiables.
+      </p>
+    </div>
   </section>
 
   <!-- Pied de page -->
