@@ -1,12 +1,12 @@
-// main.js (version avec navigation et “defer” dans index.html)
-// ------------------------------------------------------------
+// main.js (ajout d'un bouton "Afficher mes résultats")
+// ---------------------------------------------------
 
 // Variables globales
-let dataGlobal;              // contiendra { questions, normative, subscales }
+let dataGlobal;                // contiendra { questions, normative, subscales }
 const app = document.getElementById('app');
 const navList = document.getElementById('question-nav');
 const toggleNavBtn = document.getElementById('toggle-nav');
-let current = 0;             // index de la question en cours (0 à 79)
+let current = 0;               // index de la question en cours (0 à 79)
 const answers = new Array(80).fill(null); // conserve la réponse ou null
 
 // 1. Chargement du JSON au démarrage
@@ -20,7 +20,6 @@ async function loadData() {
     initNav();         // créer les 80 boutons Q1…Q80
     renderQuestion();  // afficher la première question
   } catch (err) {
-    // Si element #app est null, la page n’a pas encore chargé le DOM (mais on a "defer", donc ça ne devrait plus arriver).
     if (app) {
       app.innerHTML = `<p class="note">Impossible de charger les questions : ${err.message}</p>`;
     } else {
@@ -48,7 +47,7 @@ function initNav() {
     navList.appendChild(li);
   });
 
-  // Bouton pour déplier/ replier la colonne
+  // Bouton pour déplier/replier la colonne
   toggleNavBtn.onclick = () => {
     const navContainer = document.getElementById('question-nav-container');
     navContainer.classList.toggle('collapsed');
@@ -66,7 +65,7 @@ function renderQuestion() {
   const { questions, normative } = dataGlobal;
   updateNavClasses(); // met à jour les classes CSS dans la colonne
 
-  // Quand on a répondu à la dernière question, on affiche les résultats
+  // Si on a dépassé la dernière question, on affiche directement les résultats
   if (current >= questions.length) {
     showResults();
     return;
@@ -99,12 +98,33 @@ function renderQuestion() {
     const isNorm = normative.includes(current);
     const mapped = isNorm ? [0, 1, 2, 3][i] : [3, 2, 1, 0][i];
     if (prev !== null && prev === mapped) {
-      btn.style.border = '2px solid #4285f4';
+      btn.classList.add('selected');
     }
 
     btn.onclick = () => selectAnswer(i);
     qDiv.appendChild(btn);
   });
+
+  // On ajoute, sous les 4 boutons, le bouton “Afficher mes résultats” 
+  // qui s’affiche uniquement si toutes les réponses sont remplies (aucun null).
+  if (answers.every(ans => ans !== null)) {
+    const showBtn = document.createElement('button');
+    showBtn.textContent = 'Afficher mes résultats';
+    showBtn.id = 'show-results-btn';
+    showBtn.style.marginTop = '1.2rem';
+    showBtn.style.padding = '0.6rem 1rem';
+    showBtn.style.fontSize = '1rem';
+    showBtn.style.border = 'none';
+    showBtn.style.borderRadius = '6px';
+    showBtn.style.background = '#4285f4';
+    showBtn.style.color = '#fff';
+    showBtn.style.cursor = 'pointer';
+    showBtn.onclick = () => {
+      current = questions.length; // forcer “au‐delà” pour déclencher showResults()
+      showResults();
+    };
+    qDiv.appendChild(showBtn);
+  }
 
   app.appendChild(qDiv);
 }
@@ -130,8 +150,11 @@ function selectAnswer(buttonIdx) {
   // Avancer à la question suivante si elle existe
   if (current < dataGlobal.questions.length - 1) {
     current++;
+    renderQuestion();
+  } else {
+    // Si c'était la question 80, on reste sur la carte Q80 mais on affiche le bouton “Afficher mes résultats”
+    renderQuestion();
   }
-  renderQuestion();
 }
 
 // 6. Mettre à jour les classes sur les boutons Qn pour "current"
@@ -196,7 +219,7 @@ function showResults() {
   app.innerHTML = '';
   document.getElementById('main-content').appendChild(resDiv);
 
-  // Cacher la navigation
+  // Cacher la navigation pour laisser place aux résultats
   document.getElementById('question-nav-container').classList.add('collapsed');
   toggleNavBtn.textContent = 'Voir toutes mes réponses ▶';
 
