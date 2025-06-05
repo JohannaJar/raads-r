@@ -8,8 +8,21 @@
 </head>
 <body>
   <h1>Test RAADS-R (version française)</h1>
-  <p>Répondez honnêtement à chacune des 80 affirmations. Choisissez une seule réponse par ligne.</p>
-  <div id="app"></div>
+  <p>Répondez honnêtement à chacune des 80 affirmations. Vous pouvez naviguer de question en question via le menu à gauche.</p>
+  
+  <div id="container">
+    <!-- Colonne de navigation (liste des questions) -->
+    <aside id="question-nav-container">
+      <button id="toggle-nav">Voir toutes mes réponses ▶</button>
+      <ul id="question-nav"></ul>
+    </aside>
+
+    <!-- Zone principale : affichage de la question courante -->
+    <main id="main-content">
+      <div id="app"></div>
+    </main>
+  </div>
+  
   <footer>
     <p class="tiny">© 2025 — Adaptation libre pour usage non commercial. Référence : Ritvo et al., 2011.</p>
   </footer>
