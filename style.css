@@ -357,32 +357,44 @@ footer {
 .pdf-btn:hover {
   background: #218838;       /* un vert un peu plus foncé au survol */
 }
-
-/* ─── Règles spécifiques pour l’impression (PDF) ─── */
+/* ─── Règles d’impression (PDF) ─── */
 @media print {
-  /* Masquer tout ce qui n’est pas la section #results (exemple) */
-  header, 
-  #about, 
-  #quiz, 
-  #submit-btn, 
-  .submit-container, 
+  /* 1. Masquer tout ce qui n’est PAS #results (on veut uniquement la partie résultats + résumés) */
+  header,
+  #about,
+  #quiz,
+  #submit-btn,
+  .submit-container,
   footer {
     display: none !important;
   }
 
-  /* Faire en sorte que #results occupe toute la page */
+  /* 2. Réorganiser #results pour qu’il occupe toute la largeur */
   #results {
     margin: 0;
     width: 100%;
+    padding: 0;
   }
 
-  /* Améliorer lisibilité des tableaux à l’impression */
+  /* 3. Affiner l’aspect imprimé des cartes et tableaux */
+  .card, .results-interpretation, .results-comparison, #answers-summary-container {
+    background: #fff;
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+
   table {
     page-break-inside: avoid;
   }
-  
-  /* Optionnel : s’assurer que la page ne coupe pas une carte  */
-  .card {
-    page-break-inside: avoid;
+
+  /* 4. Optionnel : masquer le bouton “Télécharger mes résultats en PDF” à l’impression */
+  .pdf-button-container {
+    display: none !important;
+  }
+
+  /* 5. Ajuster la taille de police si besoin pour l’impression */
+  body {
+    font-size: 12pt;
   }
 }
+
