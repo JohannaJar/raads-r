@@ -137,21 +137,26 @@ function showResults(totals) {
 
   // --- Section “Vos réponses” réductible + PDF ---
   const summary = document.getElementById('answers-summary-container');
-  summary.innerHTML = '';
+summary.innerHTML = '';
 
-  // Bouton PDF
-  const pdfBtn = document.createElement('button');
-  pdfBtn.id = 'download-pdf-btn';
-  pdfBtn.textContent = '📄 Télécharger mes résultats en PDF';
-  pdfBtn.className = 'pdf-btn';
-  summary.appendChild(pdfBtn);
+// Bouton PDF
+const pdfBtn = document.createElement('button');
+pdfBtn.id = 'download-pdf-btn';
+pdfBtn.textContent = '📄 Télécharger mes résultats en PDF';
+pdfBtn.className = 'pdf-btn';
+summary.appendChild(pdfBtn);
 
-  // Bouton d'affichage masquable
-  const toggleBtn = document.createElement('button');
-  toggleBtn.textContent = '📝 Afficher / Masquer mes réponses';
-  toggleBtn.className = 'toggle-btn';
-  toggleBtn.style.marginTop = '1rem';
-  summary.appendChild(toggleBtn);
+// Texte cliquable pour afficher/masquer
+const toggleText = document.createElement('p');
+toggleText.innerHTML = '>> <strong>Afficher / Masquer le détail des réponses</strong> <<';
+toggleText.style.cursor = 'pointer';
+toggleText.style.textAlign = 'center';
+toggleText.style.margin = '1.5rem 0 1rem';
+toggleText.onclick = () => {
+  answersBox.style.display = answersBox.style.display === 'none' ? 'block' : 'none';
+};
+summary.appendChild(toggleText);
+
 
   // Bloc des réponses masquables
   const answersBox = document.createElement('div');
