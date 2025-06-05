@@ -1,0 +1,8 @@
+
+body{font-family:sans-serif;max-width:800px;margin:auto;padding:1rem;}
+h1{text-align:center;}
+.card{border:1px solid #ddd;border-radius:12px;padding:1rem;margin-top:1rem;box-shadow:0 2px 4px rgba(0,0,0,.1);}
+.choice{display:block;width:100%;margin:.5rem 0;padding:.6rem;border:none;border-radius:8px;background:#eee;cursor:pointer;}
+.choice:hover{background:#ddd;}
+.note{font-size:.9rem;color:#555;}
+footer{margin-top:2rem;text-align:center;font-size:.8rem;color:#999;}
