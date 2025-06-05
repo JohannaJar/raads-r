@@ -1,39 +1,84 @@
-/* 1. Styles généraux de la page */
+/* ─────────── Styles globaux ─────────── */
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: sans-serif;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background: #f9f9f9;
+  color: #222;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+h1, h2 {
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+  color: #111;
 }
 
 h1 {
+  font-size: 2.5rem;
   text-align: center;
   margin-top: 1rem;
 }
 
-p {
+.subtitle {
+  font-size: 1.1rem;
+  color: #555;
   text-align: center;
-  margin-bottom: 1rem;
+  margin-top: 0.5rem;
 }
 
-/* 2. Conteneur principal : navigation + zone de contenu */
+/* ─────────── Section “À propos” & “Comment utiliser” ─────────── */
+#about-test p,
+#how-to-use p,
+#how-to-use li {
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+  color: #333;
+}
+
+#about-test ul.no-bullet,
+#how-to-use ul.no-bullet {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#how-to-use ol {
+  margin-left: 1.2rem;
+}
+
+#how-to-use ol li {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* ─────────── Zone questionnaire ─────────── */
+#question-section {
+  margin-top: 2rem;
+}
+
 #container {
   display: flex;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 1rem;
-  flex: 1;
 }
 
-/* 2.1. Colonne de navigation (fermeture/affichage gérée par JS) */
+/* Colonne de navigation à gauche */
 #question-nav-container {
   width: 200px;
   min-width: 200px;
   border-right: 1px solid #ddd;
   padding-right: 0.5rem;
-  position: relative;
+  background: #fff;
   transition: transform 0.3s ease;
 }
 
@@ -50,24 +95,26 @@ p {
   border: none;
   background: #eee;
   border-radius: 6px;
+  width: 100%;
+  text-align: center;
 }
 
 #toggle-nav:hover {
   background: #ddd;
 }
 
-/* La liste des questions */
 #question-nav {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 1rem 0;
+  max-height: 75vh;
+  overflow-y: auto;
 }
 
 #question-nav li {
   margin: 0.2rem 0;
 }
 
-/* Chaque lien de navigation */
 #question-nav li button {
   width: 100%;
   text-align: left;
@@ -76,80 +123,102 @@ p {
   border: none;
   border-radius: 4px;
   background: #f5f5f5;
+  color: #b00;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
 
 #question-nav li button:hover {
   background: #e0e0e0;
 }
 
-/* Mettre en évidence la question sélectionnée */
 #question-nav li button.current {
   background: #4285f4;
-  color: white;
+  color: #fff;
 }
 
-/* Afficher en rouge la question non encore répondue */
-#question-nav li button.unanswered {
-  color: #b00;
-  font-weight: bold;
-}
-
-/* Afficher en vert la question répondue */
 #question-nav li button.answered {
   color: #080;
 }
 
-/* 2.2. Zone principale d’affichage des questions */
+/* Zone principale d’affichage des questions */
 #main-content {
   flex: 1;
   padding-left: 1rem;
 }
 
-/* 3. Styles de la carte “question” et des boutons */
 .card {
+  background: #fff;
   border: 1px solid #ddd;
   border-radius: 12px;
-  padding: 1rem;
+  padding: 1.5rem;
   margin-top: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
+.card h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.4rem;
+  color: #222;
+}
+
+.card p {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+/* Styles des boutons de réponse */
 .choice {
   display: block;
   width: 100%;
-  margin: 0.5rem 0;
-  padding: 0.6rem;
+  margin: 0.6rem 0;
+  padding: 0.8rem;
   border: none;
   border-radius: 8px;
-  background: #eee;
+  background: #f0f0f0;
   cursor: pointer;
   font-size: 1rem;
+  color: #222;
+  transition: background 0.2s ease, border 0.2s ease;
 }
 
 .choice:hover {
-  background: #ddd;
+  background: #e0e0e0;
 }
 
+.choice:focus {
+  outline: none;
+  border: 2px solid #4285f4;
+}
+
+/* Pour entourer la réponse sélectionnée */
+.choice.selected {
+  border: 2px solid #4285f4;
+}
+
+/* Note explicative / mise en garde */
 .note {
   font-size: 0.9rem;
   color: #555;
+  margin-top: 1rem;
 }
 
-/* 4. Footer */
-footer {
-  margin-top: 2rem;
-  width: 100%;
+/* ─────────── Pied de page ─────────── */
+#footer {
+  margin-top: 3rem;
+  padding-bottom: 2rem;
 }
 
 .tiny {
-  text-align: center;
   font-size: 0.8rem;
-  color: #999;
+  color: #777;
+  text-align: center;
+  margin-top: 1rem;
 }
 
-/* 5. Adaptation responsive (petits écrans) */
-@media (max-width: 800px) {
+/* ─────────── Adaptation responsive pour petits écrans ─────────── */
+@media (max-width: 900px) {
   #container {
     flex-direction: column;
   }
@@ -157,12 +226,15 @@ footer {
     position: absolute;
     top: 60px;
     left: 0;
-    background: white;
+    background: #fff;
     height: calc(100% - 60px);
-    z-index: 10;
+    z-index: 100;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   }
   #question-nav-container.collapsed {
     transform: translateX(-220px);
+  }
+  #main-content {
+    padding-left: 0;
   }
 }
