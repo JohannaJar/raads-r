@@ -1,5 +1,3 @@
-/* main.js – version PDF avec jsPDF */
-
 let questions = [];
 let answers = [];
 
@@ -108,7 +106,7 @@ function showResults(totals) {
 
   const labels = {
     'Social relatedness': 'Relations sociales',
-    'Circumscribed interests': 'Intérêts circonscrits',
+    'Circumscribed interests': 'Centres d’intérêt restreints / intérêts spécifiques',
     'Language': 'Langage',
     'Sensory-motor': 'Sensoriel-moteur'
   };
@@ -137,8 +135,33 @@ function showResults(totals) {
   cardWrap.appendChild(card);
   card.scrollIntoView({ behavior: 'smooth' });
 
+  // --- Section “Vos réponses” réductible + PDF ---
   const summary = document.getElementById('answers-summary-container');
-  summary.innerHTML = '<h3>Vos réponses</h3>';
+  summary.innerHTML = '';
+
+  // Bouton PDF
+  const pdfBtn = document.createElement('button');
+  pdfBtn.id = 'download-pdf-btn';
+  pdfBtn.textContent = '📄 Télécharger mes résultats en PDF';
+  pdfBtn.className = 'pdf-btn';
+  summary.appendChild(pdfBtn);
+
+  // Bouton d'affichage masquable
+  const toggleBtn = document.createElement('button');
+  toggleBtn.textContent = '📝 Afficher / Masquer mes réponses';
+  toggleBtn.className = 'toggle-btn';
+  toggleBtn.style.marginTop = '1rem';
+  summary.appendChild(toggleBtn);
+
+  // Bloc des réponses masquables
+  const answersBox = document.createElement('div');
+  answersBox.id = 'answers-list';
+  answersBox.style.display = 'none';
+  summary.appendChild(answersBox);
+
+  const heading = document.createElement('h3');
+  heading.textContent = 'Vos réponses';
+  answersBox.appendChild(heading);
 
   const optLabels = [
     'Vrai maintenant et avant 16 ans',
@@ -153,54 +176,56 @@ function showResults(totals) {
     li.innerHTML = `<strong>Q${i + 1} :</strong> ${q}<br><em>Réponse :</em> ${optLabels[answers[i]]}`;
     ol.appendChild(li);
   });
-  summary.appendChild(ol);
+  answersBox.appendChild(ol);
 
-  const pdfBtn = document.getElementById('download-pdf-btn');
-  if (pdfBtn) {
-    pdfBtn.onclick = () => {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+  toggleBtn.onclick = () => {
+    answersBox.style.display = answersBox.style.display === 'none' ? 'block' : 'none';
+  };
 
-      doc.setFontSize(16);
-      doc.text("Résultats du test RAADS-R", 10, 20);
+  // Fonction PDF
+  pdfBtn.onclick = () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-      let y = 35;
-      doc.setFontSize(12);
-      Object.entries(totals).forEach(([clef, val]) => {
-        if (clef === 'total') return;
-        doc.text(`${labels[clef]} : ${val}`, 10, y);
-        y += 10;
-      });
+    doc.setFontSize(16);
+    doc.text("Résultats du test RAADS-R", 10, 20);
 
-      doc.text(`Score total : ${totals.total} / 240`, 10, y);
+    let y = 35;
+    doc.setFontSize(12);
+    Object.entries(totals).forEach(([clef, val]) => {
+      if (clef === 'total') return;
+      doc.text(`${labels[clef]} : ${val}`, 10, y);
       y += 10;
+    });
 
-      doc.setFont("helvetica", "italic");
-      doc.text(totals.total >= 65
-        ? "≥ 65 → Traits autistiques probables"
-        : "Score inférieur au seuil clinique (65)", 10, y);
+    doc.text(`Score total : ${totals.total} / 240`, 10, y);
+    y += 10;
 
-      y += 20;
-      doc.setFont("helvetica", "normal");
-      doc.text("Vos réponses :", 10, y);
-      y += 10;
+    doc.setFont("helvetica", "italic");
+    doc.text(totals.total >= 65
+      ? "≥ 65 → Traits autistiques probables"
+      : "Score inférieur au seuil clinique (65)", 10, y);
 
-      questions.forEach((q, i) => {
-        const r = answers[i];
-        const answer = optLabels[r];
-        const line = `Q${i + 1}. ${q} - Réponse : ${answer}`;
-        const lines = doc.splitTextToSize(line, 180);
-        lines.forEach(l => {
-          if (y > 280) {
-            doc.addPage();
-            y = 20;
-          }
-          doc.text(l, 10, y);
-          y += 7;
-        });
+    y += 20;
+    doc.setFont("helvetica", "normal");
+    doc.text("Vos réponses :", 10, y);
+    y += 10;
+
+    questions.forEach((q, i) => {
+      const r = answers[i];
+      const answer = optLabels[r];
+      const line = `Q${i + 1}. ${q} - Réponse : ${answer}`;
+      const lines = doc.splitTextToSize(line, 180);
+      lines.forEach(l => {
+        if (y > 280) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(l, 10, y);
+        y += 7;
       });
+    });
 
-      doc.save("resultats-raads-r.pdf");
-    };
-  }
+    doc.save("resultats-raads-r.pdf");
+  };
 }
