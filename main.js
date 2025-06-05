@@ -119,21 +119,25 @@ function calculateResults(questions, normative, subscales) {
   showResults(totals);
 }
 
-// 4. Fonction d’affichage des résultats
+/**
+ * showResults : injecte la carte de résultats dans #results-card-container
+ * et configure le bouton “Télécharger mes résultats en PDF”.
+ */
 function showResults(totals) {
-  const resultsSection = document.getElementById('results');
-  resultsSection.innerHTML = ''; // on vide tout le contenu existant
+  // 1. Sélectionner le seul conteneur qu'on vide/réécrit
+  const cardContainer = document.getElementById('results-card-container');
+  cardContainer.innerHTML = ''; // on ne touche pas aux sections statiques en dessous
 
-  // 1) Créer la carte (div.card) pour afficher les résultats
+  // 2. Créer la carte (div.card) pour afficher les résultats
   const card = document.createElement('div');
   card.className = 'card';
 
-  // Titre principal
+  // 2.a. Titre
   const heading = document.createElement('h2');
   heading.textContent = 'Vos résultats';
   card.appendChild(heading);
 
-  // 2) Table de correspondance anglais → français pour les sous-catégories
+  // 2.b. Table de correspondance anglais → français
   const labelsFr = {
     "Social relatedness": "Relations sociales",
     "Circumscribed interests": "Intérêts circonscrits",
@@ -141,10 +145,10 @@ function showResults(totals) {
     "Sensory-motor": "Sensoriel-moteur"
   };
 
-  // 3) Construire la liste des sous-scores
+  // 2.c. Liste des sous-scores (en français)
   const ul = document.createElement('ul');
   Object.entries(totals).forEach(([keyEn, score]) => {
-    if (keyEn === 'total') return; // on ne gère pas "total" ici
+    if (keyEn === 'total') return; // on gère "total" plus bas
     const labelFr = labelsFr[keyEn] || keyEn;
     const li = document.createElement('li');
     li.innerHTML = `<strong>${labelFr} :</strong> ${score}`;
@@ -152,41 +156,48 @@ function showResults(totals) {
   });
   card.appendChild(ul);
 
-  // 4) Afficher le score total + interprétation
+  // 2.d. Score total + interprétation
   const h3 = document.createElement('h3');
   h3.innerHTML = `Score total : ${totals.total} / 240`;
   card.appendChild(h3);
 
   const interpretation = document.createElement('p');
-  interpretation.innerHTML =
-    totals.total >= 65
-      ? `<span style="color: #007bff; font-weight: bold;">
-          ≥ 65 → traits autistiques probables
-        </span>`
-      : `<span style="color: #ff8800; font-weight: bold;">
-          Score inférieur au seuil clinique (65)
-        </span>`;
+  interpretation.innerHTML = totals.total >= 65
+    ? `<span style="color: #007bff; font-weight: bold;">
+         ≥ 65 → traits autistiques probables
+       </span>`
+    : `<span style="color: #ff8800; font-weight: bold;">
+         Score inférieur au seuil clinique (65)
+       </span>`;
   card.appendChild(interpretation);
 
-  // 5) Note de mise en garde
+  // 2.e. Note de mise en garde
   const note = document.createElement('p');
   note.className = 'note';
   note.textContent = 'Ce test est un outil de dépistage et ne remplace pas un diagnostic clinique.';
   card.appendChild(note);
 
-  // 6) Bouton “Recommencer le test”
-  const btn = document.createElement('button');
-  btn.id = 'restart';
-  btn.textContent = 'Recommencer le test';
-  btn.onclick = () => {
+  // 2.f. Bouton “Recommencer le test”
+  const btnRestart = document.createElement('button');
+  btnRestart.id = 'restart';
+  btnRestart.textContent = 'Recommencer le test';
+  btnRestart.onclick = () => {
     location.reload();
   };
-  card.appendChild(btn);
+  card.appendChild(btnRestart);
 
-  // 7) Ajouter la carte dans la section #results
-  resultsSection.appendChild(card);
+  // 3. On insère la carte dans son conteneur dédié
+  cardContainer.appendChild(card);
 
-  // 8) Faire défiler doucement vers le haut de la carte de résultats
+  // 4. Faire défiler (smooth) vers la carte de résultats si la page est longue
   card.scrollIntoView({ behavior: 'smooth' });
-}
 
+  // 5. Configurer le bouton “Télécharger mes résultats en PDF”
+  const pdfBtn = document.getElementById('download-pdf-btn');
+  if (pdfBtn) {
+    pdfBtn.onclick = () => {
+      // Juste ouvrir la boîte d’impression : l’utilisateur choisira “Imprimer en PDF”
+      window.print();
+    };
+  }
+}
