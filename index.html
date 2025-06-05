@@ -52,13 +52,19 @@
 
   <!-- ─── Section Résultats ─── -->
   <section id="results" class="container">
-    <!-- (A) CONTAINER pour la carte de résultats -->
+    <!-- (A) Conteneur pour la carte de résultats -->
     <div id="results-card-container"></div>
 
-    <!-- (B) CONTAINER pour le résumé des réponses (questions + réponses) -->
+    <!-- (B) Conteneur pour le résumé des réponses (Q1…Q80 + choix) -->
     <div id="answers-summary-container"></div>
 
-    <!-- (C) Section “Que signifient mes scores ?” (statique) -->
+    <!-- (C) Bouton “Télécharger mes résultats en PDF”, 
+          injecté ici juste après “Vos réponses” -->
+    <div class="pdf-button-container">
+      <button id="download-pdf-btn" class="pdf-btn">Télécharger mes résultats en PDF</button>
+    </div>
+
+    <!-- (D) Section “Que signifient mes scores ?” (statique) -->
     <div class="results-interpretation">
       <h3>Que signifient mes scores ?</h3>
       <p>
@@ -80,8 +86,7 @@
           </tr>
           <tr>
             <td>50</td>
-            <td>Quelques traits autistiques, mais probablement non autiste 
-                (certains autistes peuvent obtenir jusqu’à 44).</td>
+            <td>Quelques traits autistiques, mais probablement non autiste (certains autistes peuvent obtenir jusqu’à 44).</td>
           </tr>
           <tr>
             <td>65</td>
@@ -115,7 +120,7 @@
       </p>
     </div>
 
-    <!-- (D) Section “Scores moyens RAADS-R” (statique) -->
+    <!-- (E) Section “Scores moyens RAADS-R” (statique) -->
     <div class="results-comparison">
       <h3>Scores moyens RAADS-R</h3>
       <p>
@@ -204,11 +209,6 @@
         car certaines personnes non diagnostiquées se découvrent ensuite des traits autistiques.  
         Les valeurs issues de la recherche clinique (Ritvo et al., 2011) restent les plus fiables.
       </p>
-    </div>
-
-    <!-- (E) Bouton “Télécharger mes résultats en PDF” -->
-    <div class="pdf-button-container">
-      <button id="download-pdf-btn" class="pdf-btn">Télécharger mes résultats en PDF</button>
     </div>
   </section>
 
