@@ -122,49 +122,59 @@ function calculateResults(questions, normative, subscales) {
 // 4. Fonction d’affichage des résultats
 function showResults(totals) {
   const resultsSection = document.getElementById('results');
-  resultsSection.innerHTML = ''; // vider le contenu existant
+  resultsSection.innerHTML = ''; // on vide tout le contenu existant
 
+  // 1) Créer la carte (div.card) pour afficher les résultats
   const card = document.createElement('div');
   card.className = 'card';
 
-  // Titre
+  // Titre principal
   const heading = document.createElement('h2');
   heading.textContent = 'Vos résultats';
   card.appendChild(heading);
 
-  // Liste des sous-scores
+  // 2) Table de correspondance anglais → français pour les sous-catégories
+  const labelsFr = {
+    "Social relatedness": "Relations sociales",
+    "Circumscribed interests": "Intérêts circonscrits",
+    "Language": "Langage",
+    "Sensory-motor": "Sensoriel-moteur"
+  };
+
+  // 3) Construire la liste des sous-scores
   const ul = document.createElement('ul');
-  Object.entries(totals).forEach(([name, score]) => {
-    if (name !== 'total') {
-      const li = document.createElement('li');
-      li.innerHTML = `<strong>${name} :</strong> ${score}`;
-      ul.appendChild(li);
-    }
+  Object.entries(totals).forEach(([keyEn, score]) => {
+    if (keyEn === 'total') return; // on ne gère pas "total" ici
+    const labelFr = labelsFr[keyEn] || keyEn;
+    const li = document.createElement('li');
+    li.innerHTML = `<strong>${labelFr} :</strong> ${score}`;
+    ul.appendChild(li);
   });
   card.appendChild(ul);
 
-  // Score total + interprétation
+  // 4) Afficher le score total + interprétation
   const h3 = document.createElement('h3');
   h3.innerHTML = `Score total : ${totals.total} / 240`;
   card.appendChild(h3);
 
   const interpretation = document.createElement('p');
-  interpretation.innerHTML = totals.total >= 65
-    ? `<span style="color: #007bff; font-weight: bold;">
-         ≥ 65 → traits autistiques probables
-       </span>`
-    : `<span style="color: #ff8800; font-weight: bold;">
-         Score inférieur au seuil clinique (65)
-       </span>`;
+  interpretation.innerHTML =
+    totals.total >= 65
+      ? `<span style="color: #007bff; font-weight: bold;">
+          ≥ 65 → traits autistiques probables
+        </span>`
+      : `<span style="color: #ff8800; font-weight: bold;">
+          Score inférieur au seuil clinique (65)
+        </span>`;
   card.appendChild(interpretation);
 
-  // Note de mise en garde
+  // 5) Note de mise en garde
   const note = document.createElement('p');
   note.className = 'note';
   note.textContent = 'Ce test est un outil de dépistage et ne remplace pas un diagnostic clinique.';
   card.appendChild(note);
 
-  // Bouton "Recommencer le test"
+  // 6) Bouton “Recommencer le test”
   const btn = document.createElement('button');
   btn.id = 'restart';
   btn.textContent = 'Recommencer le test';
@@ -173,8 +183,10 @@ function showResults(totals) {
   };
   card.appendChild(btn);
 
+  // 7) Ajouter la carte dans la section #results
   resultsSection.appendChild(card);
 
-  // Scroll vers les résultats
+  // 8) Faire défiler doucement vers le haut de la carte de résultats
   card.scrollIntoView({ behavior: 'smooth' });
 }
+
